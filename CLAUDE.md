@@ -29,7 +29,9 @@ later audience, not v1.
 | `claude/design-data-formats.md` | **exists** | Second design pass: the shape of every file — machine record, recipe, catalogue, config, regulatory cache, and the JSON spec handed to the generator. |
 | `plugin/` | *not yet* | The plugin itself — `skills/laser-machines/`, `skills/laser-lightburn/`, `commands/`, and the generator. |
 | `plugin/tests/` | *not yet* | The committed test suite, including golden files. |
-| `README.md`, `INSTALL.md`, `STATUS.md` | *not yet* | Human-facing description, installation, and current state. |
+| `README.md` | **exists** | What the plugin will do, for a human. Deliberately minimal while it is unbuilt. |
+| `INSTALL.md` | **exists** | Prerequisites, which are real now; deployment, which is marked as not yet available. |
+| `STATUS.md` | **exists** | What exists today, what is open, where to pick up. Read it first in a new session. |
 
 Nothing else exists yet. Requirements are gathered and both design passes are done. What remains
 open needs LightBurn rather than a decision: the two unverified format elements (R-G15), how far
@@ -38,6 +40,26 @@ geometry generation goes in v1 (OQ-7), and which `.lbrn` format version to emit 
 **This repository holds no private data** — no machine records, no recipes, no burn readings.
 Real work happens in a separate installation of the plugin; the loop back here is that a problem
 found in real work gets reported, fixed here, and re-installed. (R-D4)
+
+## Keeping STATUS.md
+
+`STATUS.md` is the first thing to read in a new session and the last thing to update before
+leaving one. It has **exactly three sections** and nothing else:
+
+1. **What exists today** — a declaration of the present.
+2. **Open problems** — what is blocked, unverified or undecided, and why it matters.
+3. **Where to start the next session** — the next few concrete moves, in order.
+
+The rules that keep it useful:
+
+- **It is not a log.** No account of what was done, no dated entries accumulating down the page,
+  no "previously we…". That history is in `git log`, where it cannot go stale.
+- **Rewrite, never append.** When something becomes true, edit the sentence that said otherwise.
+  When a problem is solved, delete it — a resolved problem leaves no trace here.
+- **Update it whenever a session changed what exists, what is blocked, or what comes next.** A
+  session that only discussed something changed none of those and needs no update.
+- **Keep the date at the top honest**, and say plainly what does *not* exist. An orientation
+  file that lists the intended tree flatly reads as though it were all there.
 
 ## Working agreements
 
