@@ -16,16 +16,12 @@ undocumented and changes between versions, so the plugin records which version y
 
 ### .NET SDK
 
-The `.lbrn` generator is a .NET program. Install the SDK — not just the runtime.
+The `.lbrn` generator is a .NET program. Install the **SDK**, not the Runtime — the Runtime can
+only start an already-built program, and this one is built from source on your machine.
 
-**Windows**
-
-```
-winget install Microsoft.DotNet.SDK.10
-```
-
-**Linux** — follow the instructions for your distribution at
-<https://learn.microsoft.com/dotnet/core/install/linux>, installing the **SDK** package.
+Download it from <https://dotnet.microsoft.com/en-us/download/dotnet/10.0>. That page has the
+installers for Windows and macOS and the per-distribution instructions for Linux. Take the
+column marked **SDK**.
 
 **Verify:**
 
