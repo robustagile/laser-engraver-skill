@@ -36,6 +36,11 @@ establish whether it meant 0.01 mm or 0.01 in — a factor of 25 between "alread
 "eight times away" — and the question was never resolved before the machine was retired. A field
 name that carries its unit cannot produce that.
 
+**Every linear dimension is metric.** Millimetres for anything a user sets or measures with a
+rule, micrometres for depth. Inches appear in exactly one place — the prose of an acceptance
+criterion, naming the regulation the metric figure came from, as in "0.0762 mm (0.003 in, the
+NFA minimum)". No field is ever in inches, and no field name offers a choice of unit.
+
 **Every mandatory key is always present, and `unknown` is a legal value.** A missing key is a
 parse error; an unknown value is a fact about the machine. This matters because a half-finished
 onboarding has to be resumable (composition §4), and because the generator can then fail

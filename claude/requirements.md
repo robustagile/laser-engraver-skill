@@ -79,7 +79,10 @@ The plugin is distributed as a **GitHub repository**, not as a packaged/installe
 - **R-E5** The owner's environment is WSL over Windows, with LightBurn on the Windows side.
   Generated files must land where Windows LightBurn can open them.
 - **R-E6** Canonical units throughout: millimetres, mm/s, kHz, ns, watts and percent as
-  applicable. The recipe store holds canonical values; presentation for a given software is a
+  applicable. **Every linear dimension is metric, with no exceptions.** Where a regulatory
+  requirement is written in inches, the metric value is what is stored and checked, and the
+  imperial original is recorded in prose as the source it came from — never as a second unit a
+  field might be in. The recipe store holds canonical values; presentation for a given software is a
   separate layer. Coordinate convention (axis direction, origin) is a property recorded per
   machine, not assumed globally.
 
@@ -148,7 +151,7 @@ The machines the repository author has available to test against. They define wh
   powder-coated / plated / oxide) frequently matter more than the base material.
 - **R-R4** A recipe is bound to the **(machine, lens)** pair it was verified on.
 - **R-R5** Each recipe carries **acceptance criteria** — what "good" means for that goal, in
-  measurable terms (depth in µm/thou, contrast, legibility, character height), defined *before*
+  measurable terms (depth in µm, contrast, legibility, character height in mm), defined *before*
   testing. Without this, "refine the parameters" degenerates into taste.
 - **R-R6** Recipes are stored as **Markdown**.
 - **R-R7** **Provenance is mandatory and user-visible.** Every recipe states where it came from:

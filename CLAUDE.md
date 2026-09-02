@@ -52,9 +52,11 @@ found in real work gets reported, fixed here, and re-installed. (R-D4)
 These were settled in conversation and are recorded with their rationale in
 `claude/requirements.md`. Re-litigating them wastes a session.
 
-- **The unit is part of every field name** — `speed_mm_s`, `depth_um`, never a bare `depth`. The
-  prior work recorded a depth target of "0.01" and could never establish whether it meant
-  millimetres or inches. (`design-data-formats.md` §2)
+- **The unit is part of every field name, and every linear dimension is metric** —
+  `speed_mm_s`, `depth_um`, never a bare `depth` and never inches. The prior work recorded a
+  depth target of "0.01" and could never establish whether it meant millimetres or inches. A
+  regulation written in inches is converted, and the imperial original is kept in prose as the
+  source, not as a unit a field might be in. (R-E6, `design-data-formats.md` §2)
 - **Two skills, four commands.** `laser-machines` owns equipment, recipes and calibration;
   `laser-lightburn` owns the `.lbrn` format and the generator, and is a service to the first.
   One command per workflow. (`design-composition.md` §3)
