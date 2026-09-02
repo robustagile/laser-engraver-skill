@@ -44,19 +44,38 @@ same wrong assumption.
   single-pass Fill+Line shows nothing either way; this writer emits it explicitly.
 - **Text is anchored at the TOP of the line.** Glyphs run from the `XForm` translation *minus*
   the height, up to the translation.
+- **`doOutput` is the element that marks a layer as not output**, and `0` means it does not
+  fire. Unchecking Output in LightBurn 2.1.04 wrote `<doOutput Value="0"/>`. Evidence:
+  `probe/12-fiber-do-output-hide-saved.lbrn`. LightBurn omits the element when the layer *is*
+  output, which is why a saved file with everything enabled shows nothing either way; this
+  writer emits it explicitly so a reference layer is never ambiguous.
+- **`hide` is the editor-visibility element** — unchecking Show wrote `<hide Value="1"/>`. Same
+  evidence file. Visibility only: it is `doOutput` that decides whether the laser fires, and the
+  two are independent.
+- **`frequency` is the Q-switch rate element, and its value is in hertz.** A UI showing 5 kHz
+  wrote `<frequency Value="5000"/>`. Evidence:
+  `probe/11-fiber-frequency-qpulsewidth-saved.lbrn`.
+- **`QPulseWidth` is the MOPA pulse-duration element, and its value is in nanoseconds.** A UI
+  showing 150 ns wrote `<QPulseWidth Value="150"/>`. Same evidence file. This one could not have
+  been guessed; it came from asking for a saved file.
+- **Text alignment is explicit**, as `Ah` and `Av` attributes on the `Shape`. So "anchored at the
+  top of the line" is the behaviour of the *default* `Av`, not a property of the format — the
+  anchor can be set rather than worked around.
+- `maxPower2` exists alongside `maxPower`, written even for a single-source device.
 - Text `Height` is a cap height. Glyphs with brackets, ascenders or descenders ink roughly 30 %
   taller than the nominal height — the ink box is not the `Height`.
 
 ## Assumed — do not trust without checking
 
-- **`doOutput`**, the element marking a layer as not output. If the name is wrong, a layer meant
-  as a guide **will fire the laser**. LightBurn omits default-valued elements when it writes, so
-  a saved file with every layer enabled does not show this one. Probe: `09-do-output`.
-- **`frequency`**, for the fiber Q-switch rate — both the element name and whether the value is
-  Hz or kHz. Probe: `10-frequency-units`.
-- **Pulse duration** for MOPA: not modelled at all, and the name is not known well enough to
-  guess. This one is settled the other way round — have LightBurn save a file with the value
-  set, and read the name out of what it wrote.
+- **That `doOutput`, `hide`, `frequency` and `QPulseWidth` survive in the format this writer
+  emits.** Every one of those names and units is verified — but from files LightBurn saved in
+  *its own* format (`FormatVersion="0"`), which says nothing about the older version this writer
+  emits. Probe: `10-fiber-layer-settings`, which writes the same 5 kHz and 150 ns so that the
+  only difference between the two readings is the format version.
+- **Element order.** LightBurn writes `frequency` and `QPulseWidth` *before* `priority` and
+  `doOutput`; this writer puts them after. LightBurn already tolerates other differences from
+  what it writes, so order is probably free — but it is untested, and it is the first hypothesis
+  to check if probe `10` comes back showing defaults.
 
 ## What LightBurn writes versus what this writer emits
 
@@ -67,6 +86,7 @@ changing:
 | LightBurn 2.1 writes | This writer emits |
 |---|---|
 | `FormatVersion="0"`, plus `DeviceName` / `AskForSendName` | `FormatVersion="1"`, no device |
+| `<Thumbnail>` (base64 PNG), `<VariableText>`, `<UIPrefs>`, `<Notes>` | none of them |
 | `<V vx=".." vy=".." c0x=".." …/>` elements, `<P T="L" p0=".." p1=".."/>` | `VertList` / `PrimList` strings |
 | `Font="Arial,-1,100,5,400,0,0,0,0,0"` (a Qt font descriptor) | `Font="Arial"` |
 | Text keeps a `<BackupPath>` of rendered outlines | live text only |

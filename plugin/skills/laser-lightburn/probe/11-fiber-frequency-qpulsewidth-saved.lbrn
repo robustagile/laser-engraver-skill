@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightBurnProject AppVersion="2.1.04" DeviceName="Fiber x Default Lens" FormatVersion="0" MaterialHeight="0" MirrorX="False" MirrorY="False" AskForSendName="True">
+    <Thumbnail Source="iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAABnWAAAZ1gEY0crtAAAEZklEQVR4nO3dMUpdXRhG4R1jUMRg6W3E0jJVaodg5QgcS0pnEHAUks7OTtDCxiCIlTaCNjZqbsbwy8+5xPU8E/jeap3dnU/z+Xw+JvLz58+xs7MzlpaWpjoJ/4w/f/6M379/j4ODg8lufpoyAMvLy+P79+/j8+fPU52Ef8bb29s4OzsbLy8vk92cNABfv34dd3d3Y319faqT8M94enoa29vb4/HxcbKb3uIQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQtjzlsdfX13F8fDxWV1enPPsh3d/fj9lsNvb29ha648ePH2NnZ2d8+fJloTs+gufn5/H6+jrpzUl/Drq9vT2+ffvm9+D/g+vr67G1tTV+/fq10B1ra2tjd3d3rKysLHTHR/D29jYuLy/Hzc3NZDcnfQHc3t5Oee5DOzw8HHd3d4ueMTY2NsbR0dGYzWaLnsI7+BRDmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABA2PKiB/A+5+fn4+TkZJyeni50x8PDw3h8fByz2WyhO3ifT/P5fL7oEfx3FxcX4/b2dmxubi50x9XV1djf3x9ra2sL3cH7/AV6PnAVvHv6dwAAAABJRU5ErkJggg=="/>
+    <VariableText>
+        <Start Value="0"/>
+        <End Value="999"/>
+        <Current Value="0"/>
+        <Increment Value="1"/>
+        <AutoAdvance Value="0"/>
+    </VariableText>
+    <UIPrefs>
+        <Optimize_ByLayer Value="0"/>
+        <Optimize_ByGroup Value="-1"/>
+        <Optimize_ByPriority Value="1"/>
+        <Optimize_WhichDirection Value="0"/>
+        <Optimize_InnerToOuter Value="1"/>
+        <Optimize_ByDirection Value="0"/>
+        <Optimize_ReduceTravel Value="1"/>
+        <Optimize_HideBacklash Value="0"/>
+        <Optimize_ReduceDirChanges Value="0"/>
+        <Optimize_ChooseCorners Value="0"/>
+        <Optimize_AllowReverse Value="1"/>
+        <Optimize_RemoveOverlaps Value="0"/>
+        <Optimize_OptimalEntryPoint Value="0"/>
+        <Optimize_OverlapDist Value="0.025"/>
+    </UIPrefs>
+    <CutSetting type="Offset">
+        <index Value="0"/>
+        <name Value="C00"/>
+        <maxPower Value="20"/>
+        <maxPower2 Value="20"/>
+        <speed Value="100"/>
+        <frequency Value="5000"/>
+        <QPulseWidth Value="150"/>
+        <priority Value="0"/>
+    </CutSetting>
+    <Shape Type="Text" CutIndex="0" Font="Arial,-1,4096,5,400,0,0,0,0,0" Str="T" H="25" LS="0" LnS="0" Ah="1" Av="1" Weld="1" HasBackupPath="1">
+        <BackupPath Type="Path" CutIndex="0">
+            <XForm>1 0 0 1 33.231709 118.06403</XForm>
+            <V vx="1.171875" vy="1.8188477"/>
+            <V vx="7.0922852" vy="1.8188477"/>
+            <V vx="7.0922852" vy="3.9306641"/>
+            <V vx="-7.0922852" vy="3.9306641"/>
+            <V vx="-7.0922852" vy="1.8188477"/>
+            <V vx="-1.1962891" vy="1.8188477"/>
+            <V vx="-1.1962891" vy="-13.964844"/>
+            <V vx="1.171875" vy="-13.964844"/>
+            <P T="L" p0="0" p1="1"/>
+            <P T="L" p0="1" p1="2"/>
+            <P T="L" p0="2" p1="3"/>
+            <P T="L" p0="3" p1="4"/>
+            <P T="L" p0="4" p1="5"/>
+            <P T="L" p0="5" p1="6"/>
+            <P T="L" p0="6" p1="7"/>
+            <P T="L" p0="7" p1="0"/>
+        </BackupPath>
+        <XForm>1 0 0 1 33.231709 118.06403</XForm>
+    </Shape>
+    <Notes ShowOnLoad="0" Notes=""/>
+</LightBurnProject>

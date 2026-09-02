@@ -56,6 +56,7 @@
 *.exe           binary
 *.snk           binary
 
-# The one file LightBurn itself saved — evidence about the format, kept byte-exact.
-# Never normalised, so what is in the repository is what LightBurn wrote.
-plugin/skills/laser-lightburn/probe/07-fill-line.lbrn -text
+# Files LightBurn itself saved are evidence about the format, not source. The
+# "-saved" suffix marks them, and -text keeps them byte-exact: what is in the
+# repository is what LightBurn wrote.
+*-saved.lbrn    -text

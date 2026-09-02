@@ -83,7 +83,24 @@ public sealed class CutSetting
     public int Priority { get; init; }
 
     /// <summary>Whether the layer is actually output. Maps to <c>doOutput</c>.</summary>
+    /// <remarks>
+    /// Verified: unchecking Output in LightBurn 2.1.04 wrote <c>&lt;doOutput Value="0"/&gt;</c>.
+    /// See <c>probe/12-fiber-do-output-hide-saved.lbrn</c>. LightBurn omits the element when the
+    /// layer is output, which is why a saved file with everything enabled shows nothing either
+    /// way; this writer emits it explicitly so a reference layer is never ambiguous.
+    /// </remarks>
     public bool Output { get; init; } = true;
+
+    /// <summary>
+    /// Whether the layer is hidden in the editor. Maps to <c>hide</c>. Editor visibility only —
+    /// it is <see cref="Output"/> that decides whether the laser fires.
+    /// </summary>
+    /// <remarks>
+    /// Verified against the same saved file: unchecking Show wrote <c>&lt;hide Value="1"/&gt;</c>.
+    /// Emitted only when true, since LightBurn omits it at its default and there is nothing to
+    /// disambiguate.
+    /// </remarks>
+    public bool Hidden { get; init; }
 
     /// <summary>Raster line interval in millimetres. Only meaningful for scan/image layers.</summary>
     public double? Interval { get; init; }
@@ -91,7 +108,23 @@ public sealed class CutSetting
     /// <summary>
     /// Q-switch pulse frequency in Hz — a fiber-source setting, ignored by CO2/diode profiles.
     /// </summary>
+    /// <remarks>
+    /// Verified against a file LightBurn 2.1.04 saved: the element is <c>frequency</c> and the
+    /// value is in **hertz** — a UI showing 5 kHz wrote <c>5000</c>. See
+    /// <c>probe/11-fiber-frequency-qpulsewidth-saved.lbrn</c>.
+    /// </remarks>
     public double? FrequencyHz { get; init; }
+
+    /// <summary>
+    /// Pulse duration in nanoseconds — a MOPA setting, and along with
+    /// <see cref="FrequencyHz"/> the pair that colour marking lives on.
+    /// </summary>
+    /// <remarks>
+    /// Verified against the same saved file: the element is <c>QPulseWidth</c> and the value is
+    /// in **nanoseconds** — a UI showing 150 ns wrote <c>150</c>. A plain fiber source has no
+    /// adjustable pulse duration, so leave this unset for one.
+    /// </remarks>
+    public double? PulseWidthNs { get; init; }
 
     /// <summary>
     /// Optional nested pass. A <see cref="CutSettingType.Cut"/> sub-layer here turns a fill

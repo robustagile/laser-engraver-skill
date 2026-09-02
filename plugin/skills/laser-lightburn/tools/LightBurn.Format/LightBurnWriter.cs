@@ -117,6 +117,11 @@ public sealed class LightBurnWriter(LightBurnWriterOptions? options = null)
         WriteValue(writer, "priority", Numbers.Format(setting.Priority));
         WriteValue(writer, "doOutput", Numbers.Format(setting.Output));
 
+        if (setting.Hidden)
+        {
+            WriteValue(writer, "hide", Numbers.Format(setting.Hidden));
+        }
+
         if (setting.Interval is { } interval)
         {
             WriteValue(writer, "interval", Numbers.Format(interval));
@@ -125,6 +130,11 @@ public sealed class LightBurnWriter(LightBurnWriterOptions? options = null)
         if (setting.FrequencyHz is { } frequency)
         {
             WriteValue(writer, "frequency", Numbers.Format(frequency));
+        }
+
+        if (setting.PulseWidthNs is { } pulseWidth)
+        {
+            WriteValue(writer, "QPulseWidth", Numbers.Format(pulseWidth));
         }
 
         foreach (var (name, value) in setting.Extra)

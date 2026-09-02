@@ -213,6 +213,66 @@ public class LightBurnWriterTests
     }
 
     [Fact]
+    public void Hide_is_omitted_for_a_visible_layer()
+    {
+        Write(ProjectWithOneLayer()).Root!.Element("CutSetting")!.Element("hide").Should().BeNull();
+    }
+
+    [Fact]
+    public void Hidden_layer_carries_hide_but_still_outputs()
+    {
+        var project = new LightBurnProject();
+        project.AddLayer(new CutSetting { Index = 0, Hidden = true });
+
+        var setting = Write(project).Root!.Element("CutSetting")!;
+
+        setting.Element("hide")!.Attribute("Value")!.Value.Should().Be("1");
+        setting.Element("doOutput")!.Attribute("Value")!.Value.Should().Be("1");
+    }
+
+    [Fact]
+    public void Pulse_width_is_omitted_when_not_set()
+    {
+        var setting = Write(ProjectWithOneLayer()).Root!.Element("CutSetting")!;
+
+        setting.Element("QPulseWidth").Should().BeNull();
+    }
+
+    /// <summary>
+    /// The values are the ones LightBurn 2.1.04 wrote for a UI showing 5 kHz and 150 ns, so
+    /// this pins both the element names and their units against real evidence rather than
+    /// against the same inference the writer was built on.
+    /// </summary>
+    [Fact]
+    public void Fiber_settings_are_written_as_LightBurn_writes_them()
+    {
+        var project = new LightBurnProject();
+        project.AddLayer(new CutSetting
+        {
+            Index = 0,
+            FrequencyHz = 5000,
+            PulseWidthNs = 150,
+        });
+
+        var setting = Write(project).Root!.Element("CutSetting")!;
+
+        setting.Element("frequency")!.Attribute("Value")!.Value.Should().Be("5000");
+        setting.Element("QPulseWidth")!.Attribute("Value")!.Value.Should().Be("150");
+    }
+
+    [Fact]
+    public void Pulse_width_follows_frequency_as_in_a_LightBurn_written_file()
+    {
+        var project = new LightBurnProject();
+        project.AddLayer(new CutSetting { Index = 0, FrequencyHz = 5000, PulseWidthNs = 150 });
+
+        var names = Write(project).Root!.Element("CutSetting")!
+            .Elements().Select(element => element.Name.LocalName).ToList();
+
+        names.IndexOf("QPulseWidth").Should().Be(names.IndexOf("frequency") + 1);
+    }
+
+    [Fact]
     public void Rect_from_corner_is_centred_by_its_transform()
     {
         var project = ProjectWithOneLayer();
