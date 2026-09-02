@@ -35,8 +35,9 @@ later audience, not v1.
 | `INSTALL.md` | **exists** | Prerequisites, which are real now; deployment, which is marked as not yet available. |
 | `STATUS.md` | **exists** | What exists today, what is open, where to pick up. Read it first in a new session. |
 
-Requirements are gathered, both design passes are done, and the `.lbrn` writer is imported and
-under test. What remains open needs LightBurn rather than a decision: the two unverified format elements (R-G15), how far
+Requirements are gathered, both design passes are done, and the `.lbrn` writer is imported,
+under test, and verified against LightBurn for every element it emits. What remains open is
+building the skills themselves: the two unverified format elements (R-G15), how far
 geometry generation goes in v1 (OQ-7), and which `.lbrn` format version to emit (OQ-8).
 
 **This repository holds no private data** — no machine records, no recipes, no burn readings.

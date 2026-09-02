@@ -18,7 +18,7 @@ dotnet run --project ../tools/LightBurn.Probes -- <output-directory>
 | `06-rect-semantics` | Does `XForm` scale multiply `W`/`H`? | **Settled** — yes. |
 | `07-fill-line-saved` | **Not a probe — a file LightBurn itself saved** (AppVersion 2.1.04). Settled Fill+Line, bezier handles and what LightBurn writes that this writer does not. | Keep. |
 | `08-sublayer-passes` | Does a `SubLayer` carry its own `numPasses`? | **Settled** — yes, independent of its parent's. |
-| `10-fiber-layer-settings` | Do `doOutput`, `hide`, `frequency` and `QPulseWidth` survive in the older format version this writer emits? | **OPEN** — every name and unit is verified, but only from files LightBurn wrote in its own format. |
+| `10-fiber-layer-settings` | Do `doOutput`, `hide`, `frequency` and `QPulseWidth` survive in the older format version this writer emits? | **Settled** — all four read correctly at `FormatVersion="1"`, which also shows element order inside a `CutSetting` does not matter. |
 | `11-fiber-frequency-qpulsewidth-saved` | **Not a probe — a file LightBurn itself saved** with a fiber profile, 5 kHz and 150 ns set. | Keep. Settled `frequency` (hertz) and `QPulseWidth` (nanoseconds). |
 | `12-fiber-do-output-hide-saved` | **Not a probe — the same file re-saved** with Output and Show unchecked. | Keep. Settled `doOutput` and revealed `hide`. |
 

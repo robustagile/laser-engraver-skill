@@ -34,36 +34,30 @@ invoked. What exists is the machinery they will call.
 
 ## Open problems
 
-- **The fiber layer elements are verified by name and unit, but only in LightBurn's own format.**
-  `doOutput` (0 means it does not fire), `hide`, `frequency` (hertz — a UI showing 5 kHz wrote
-  5000) and `QPulseWidth` (nanoseconds) all came from two files LightBurn saved, kept as
-  `probe/11-*-saved.lbrn` and `probe/12-*-saved.lbrn`. That says nothing about the older format
-  version this writer emits. Probe `10-fiber-layer-settings` is generated and **waiting to be
-  opened**; it writes the same 5 kHz and 150 ns so the only difference is the format version.
-
-  ```
-  dotnet run --project plugin/skills/laser-lightburn/tools/LightBurn.Probes -- <output directory>
-  ```
-
-- **Element order is untested.** LightBurn writes `frequency` and `QPulseWidth` before `priority`
-  and `doOutput`; this writer puts them after. It already tolerates other differences, so order
-  is probably free — but it is the first hypothesis to check if the probe comes back showing
-  defaults.
+- **No skill or command file exists**, so nothing is installable and neither skill can be
+  invoked. What exists is the machinery they will call.
+- **No install scripts** (R-N7 to R-N9), so the plugin cannot be deployed into a `.claude` and
+  tried for real.
 - **OQ-7** — how far geometry generation goes in v1: layer settings only, layers plus geometry,
   or variable data as well.
 - **OQ-8** — whether to keep emitting the older `.lbrn` format version or match what LightBurn
-  v2 writes natively. The writer currently stamps `AppVersion="1.5.06"`, and LightBurn 2.1.04
-  also writes `Thumbnail`, `VariableText`, `UIPrefs` and `Notes`, none of which this writer
-  emits.
+  v2 writes natively. Less pressing than it looked: `FormatVersion="1"` carries every element
+  needed so far, including the fiber and MOPA ones. What LightBurn 2.1.04 writes and this writer
+  does not — `Thumbnail`, `VariableText`, `UIPrefs`, `Notes`, `DeviceName` — has caused no
+  trouble in anything opened so far.
+- **No test cards exist for either machine.** The prior machine's cards were deliberately not
+  imported, and the new ones cannot be designed until there is a machine record to design
+  against.
 - **Neither verification machine is on hand.** The MOPA 60 W and the CO2 are both in transit and
   the arrival order is unknown, so nothing may be planned that depends on which lands first
   (R-M10).
 
 ## Where to start the next session
 
-1. **Open `10-fiber-layer-settings.lbrn`** in LightBurn with a fiber/galvo profile and check the
-   four layers as the probe's `look` line describes. That closes R-G15 outright.
-2. **Then start on the skills themselves** — neither `SKILL.md` exists yet, and until one does
-   nothing is installable. `laser-lightburn` is the one with machinery behind it already.
-3. **Write the install scripts** (R-N7 to R-N9), so the plugin can be deployed into a `.claude`
-   and tried for real.
+1. **Write `laser-lightburn/SKILL.md`** — the skill with machinery already behind it. It has to
+   establish where the data store is, check for the .NET SDK on first use (R-N8), and carry the
+   one rule that must never be missed: an element whose name has not been seen read back in
+   LightBurn's UI must not be emitted.
+2. **Write the install scripts** (R-N7 to R-N9) so the plugin can be deployed and tried.
+3. **Then `laser-machines/SKILL.md`** and the machine record format, which is what the first
+   real onboarding will exercise.

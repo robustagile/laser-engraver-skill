@@ -62,20 +62,22 @@ same wrong assumption.
   top of the line" is the behaviour of the *default* `Av`, not a property of the format — the
   anchor can be set rather than worked around.
 - `maxPower2` exists alongside `maxPower`, written even for a single-source device.
+- **All four of those elements are read back from the format this writer emits**, not only from
+  LightBurn's own. Probe `10-fiber-layer-settings` wrote them at `FormatVersion="1"` with the
+  same 5 kHz and 150 ns, and all four read correctly in the UI.
+- **Element order inside a `CutSetting` does not matter.** LightBurn writes `frequency` and
+  `QPulseWidth` before `priority` and `doOutput`; this writer puts them after, and the same probe
+  read correctly either way.
 - Text `Height` is a cap height. Glyphs with brackets, ascenders or descenders ink roughly 30 %
   taller than the nominal height — the ink box is not the `Height`.
 
 ## Assumed — do not trust without checking
 
-- **That `doOutput`, `hide`, `frequency` and `QPulseWidth` survive in the format this writer
-  emits.** Every one of those names and units is verified — but from files LightBurn saved in
-  *its own* format (`FormatVersion="0"`), which says nothing about the older version this writer
-  emits. Probe: `10-fiber-layer-settings`, which writes the same 5 kHz and 150 ns so that the
-  only difference between the two readings is the format version.
-- **Element order.** LightBurn writes `frequency` and `QPulseWidth` *before* `priority` and
-  `doOutput`; this writer puts them after. LightBurn already tolerates other differences from
-  what it writes, so order is probably free — but it is untested, and it is the first hypothesis
-  to check if probe `10` comes back showing defaults.
+**Nothing, currently.** Every element this writer emits has been seen read back in LightBurn's
+UI from a file written the way this writer writes it.
+
+Keep this section. The next element added to the writer belongs here until it has been seen in
+the UI — an element that has only been *written* is an assumption, however plausible its name.
 
 ## What LightBurn writes versus what this writer emits
 

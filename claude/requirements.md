@@ -326,8 +326,15 @@ never read at run time (R-N4).
      measured in the UI.
   3. **An inferred constant must not be asserted by a test built on the same inference.** Two
      bugs previously survived precisely because their tests encoded the same wrong assumption.
-- **R-G15** Two inherited format questions block work and must be settled early. Both can be
-  answered with LightBurn alone, no laser required:
+- **R-G15** **Settled, 2026-09-02.** `doOutput` is correct and `0` means the layer does not
+  fire; `frequency` is in hertz; the MOPA pulse-duration element is `QPulseWidth`, in
+  nanoseconds; and `hide` turned up alongside as editor visibility. All four were confirmed
+  read back from the format this plugin emits, which also showed that element order inside a
+  `CutSetting` does not matter. Two files LightBurn saved did most of the work; the requirement
+  is kept for its method, below, which stands for the next format question.
+
+  The original requirement — two inherited format questions blocking work, both answerable with
+  LightBurn alone and no laser:
   - `doOutput` — the element that marks a layer as non-firing. If the name is wrong, a layer
     meant as a guide **actually fires the laser**. That makes it a safety blocker, not a
     nicety.
