@@ -24,14 +24,18 @@ later audience, not v1.
 
 | Path | State | What it holds |
 |---|---|---|
-| `claude/requirements.md` | **exists** | What the plugin must do. 88 numbered requirements with stable IDs, plus 11 open questions for design. |
-| `claude/` | exists | Requirements and design decisions. Design documents go here as they are written. |
-| `plugin/` | *not yet* | The plugin itself — skills, commands, generator code. |
-| `test/` | *not yet* | Private working area: real machine records, real recipes, real burn results. **Not published** (see `.gitignore`, and OQ-1 for the unresolved name collision with the committed test project). |
+| `claude/requirements.md` | **exists** | What the plugin must do. Numbered requirements with stable IDs, plus the open questions for design. |
+| `claude/design-composition.md` | **exists** | First design pass: delivery, installed layout, the two skills and four commands, how they communicate. |
+| `plugin/` | *not yet* | The plugin itself — `skills/laser-machines/`, `skills/laser-lightburn/`, `commands/`, and the generator. |
+| `plugin/tests/` | *not yet* | The committed test suite, including golden files. |
 | `README.md`, `INSTALL.md`, `STATUS.md` | *not yet* | Human-facing description, installation, and current state. |
 
-Nothing else exists yet. The repository is at the **end of requirements gathering, start of
-design**.
+Nothing else exists yet. Requirements are gathered and the first design pass is done; the next
+pass decides the **format** of a machine record, a recipe and the catalogue.
+
+**This repository holds no private data** — no machine records, no recipes, no burn readings.
+Real work happens in a separate installation of the plugin; the loop back here is that a problem
+found in real work gets reported, fixed here, and re-installed. (R-D4)
 
 ## Working agreements
 
@@ -46,6 +50,12 @@ design**.
 These were settled in conversation and are recorded with their rationale in
 `claude/requirements.md`. Re-litigating them wastes a session.
 
+- **Two skills, four commands.** `laser-machines` owns equipment, recipes and calibration;
+  `laser-lightburn` owns the `.lbrn` format and the generator, and is a service to the first.
+  One command per workflow. (`design-composition.md` §3)
+- **The installer never writes in the user's data directory**, and has no prerequisites of its
+  own — the .NET check lives in the skill, because a .NET program cannot check for .NET.
+  (R-N7, R-N8)
 - **No recipes ship with the plugin.** What ships is a catalogue of *which* recipes are needed;
   recipes are researched per machine, seeded with provenance, then calibrated. (R-R12–R-R17)
 - **Provenance is load-bearing, not decoration.** At the moment a machine is registered there is

@@ -1,12 +1,8 @@
 # ---------------------------------------------------------------------------
-# Private working area — see claude/requirements.md R-D4
-#
-# Holds real machine records, real recipes and burn results while developing.
-# Never published. Note: this is /test/ (the private area), NOT tests/ (the
-# committed unit and golden test project) — see OQ-1, that collision is still
-# unresolved.
+# No private working area is excluded here, deliberately: this repository holds
+# no machine records, recipes or burn readings at all (R-D4). Real work happens
+# in a separate installation, and only knowledge comes back — never data.
 # ---------------------------------------------------------------------------
-/test/
 
 # ---------------------------------------------------------------------------
 # Generated engraving output — see R-G4: output is disposable, the generator

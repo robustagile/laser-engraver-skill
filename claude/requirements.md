@@ -58,11 +58,13 @@ The plugin is distributed as a **GitHub repository**, not as a packaged/installe
   - `README.md` — human-facing description and usage;
   - `INSTALL.md` — installation and prerequisites;
   - `STATUS.md` — what works today and what is planned.
-- **R-D3** `plugin/` holds the plugin itself. `claude/` holds requirements and design decisions.
-  `test/` holds testing work.
-- **R-D4** `test/` is **not published to GitHub** — it holds real machine profiles and real
-  recipe data during development, which are private. (See OQ-1: this collides with the
-  committed unit/golden test project, which must be in the repository.)
+- **R-D3** `plugin/` holds the plugin itself — skills, commands and the generator. `claude/`
+  holds requirements and design decisions. `plugin/tests/` holds the committed test suite.
+- **R-D4** This repository holds **no private data** — no machine records, no recipes, no burn
+  readings. Real work happens in the owner's separate installation. The loop back here is
+  simply that he hits a problem in real work, reports it, it gets fixed here, and he
+  re-installs and carries on. Nothing is migrated in either direction, which is what keeps the
+  repository publishable without anyone having to remember to scrub it.
 
 ## 4. Target environment
 
@@ -345,9 +347,10 @@ never read at run time (R-N4).
 - **R-N4** The plugin is **fully self-contained**. Everything inherited from the prior
   experimental work is **copied into this repository once** — the format reference
   documentation, the file LightBurn itself saved, the probe files, the writer and card code,
-  and the golden files. Nothing at run time reads from `/mnt/d/engraving/…` or any other path
-  outside the repository. That directory is a one-time **source**, not a dependency: once the
-  import is done, the plugin must behave identically if it disappears.
+  and the golden files. Nothing at run time reads from `/mnt/d/engraving/…`, from any other path
+  outside the **installed** skill set, or from the repository clone itself — the clone is needed
+  to install and to update, never to run. That inherited directory is a one-time **source**, not
+  a dependency: once the import is done, the plugin must behave identically if it disappears.
 - **R-N6** The repository is edited from **both** Windows (LightBurn, IDE) and WSL (the
   agent), in one shared working tree. Two consequences are handled in the repository rather
   than left to be rediscovered:
@@ -359,6 +362,17 @@ never read at run time (R-N4).
     every file appears executable, and without this git reports the whole tree as
     mode-changed. It is local config, so `.gitattributes` cannot carry it — it belongs in
     the developer setup steps (R-N2).
+- **R-N7** The installer replaces the skills and the commands wholesale, and **never writes
+  inside the user's data directory**. It must be idempotent and must report what it changed.
+  Rationale: a recipe base represents weeks of burns, and an install that reached into it would
+  destroy exactly the thing the plugin exists to build.
+- **R-N8** The installer has **no prerequisites of its own** — it copies files and nothing more.
+  The .NET SDK check, and the installation guidance when it is missing, belong to the skill on
+  first use. This is bootstrap order rather than preference: a program written in .NET cannot be
+  the thing that checks whether .NET is present.
+- **R-N9** Both install scopes are supported: user level (`~/.claude`) and project level
+  (`<project>/.claude`). A project-level install must keep the user's records out of the
+  project's git history, since a project's `.claude` is commonly committed.
 - **R-N5** Self-containment is about the plugin's own assets and knowledge. It does not apply
   to the **user's** data — machine records, recipes and generated output legitimately live
   outside the shipped plugin (R-D4, OQ-2). The distinction: shipped content must never depend
@@ -381,15 +395,17 @@ never read at run time (R-N4).
 
 ## Open questions for the design stage
 
-- **OQ-1** `test/` is private and excluded from GitHub (R-D4), but the unit and golden test
-  project must be committed. Two different things are currently competing for that name; the
-  private working area and the committed test suite need distinct homes and unambiguous names.
-- **OQ-2** Where do the owner's personal data live once the plugin is installed for real work?
-  During development they live in `test/`. The previous project's one-Markdown-file-per-machine
-  pattern is the leading candidate and worked well, but placement relative to an installed
-  plugin is undecided.
-- **OQ-3** How LightBurn generation is packaged inside the plugin — the mapping of the three
-  workflows onto skills, slash commands and agents.
+- **OQ-1** ~~`test/` competes with the committed test project for one name.~~ **Resolved:** the
+  private working area does not exist in this repository at all — the owner works in a separate
+  installation. This repository holds tests in the pure sense, at `plugin/tests/`. See R-D4 and
+  `design-composition.md` §7.
+- **OQ-2** ~~Where the owner's personal data live once installed.~~ **Resolved:** in a data
+  directory beside the installed skills, which the installer never touches. See
+  `design-composition.md` §2.
+- **OQ-3** ~~How the plugin is packaged and how the workflows map onto skills and commands.~~
+  **Resolved:** two skills split by subject matter — `laser-machines` for the domain and
+  `laser-lightburn` for the format and the generator — plus four commands, one per workflow. See
+  `design-composition.md` §3.
 - **OQ-4** Whether an experiment log is kept separately from promoted recipes, and what promotes
   a candidate into a recipe (a single good burn, or a repeat).
 - **OQ-5** ~~Where the starter recipe set comes from.~~ **Resolved:** no recipes ship at all.
@@ -402,7 +418,9 @@ never read at run time (R-N4).
   (text with exact character height, primitives, SVG import, arrays), or also variable data.
 - **OQ-8** Whether to keep emitting the older format version (proven to render correctly) or
   move to what LightBurn v2 writes natively.
-- **OQ-9** How generated files reach Windows LightBurn from WSL, and where they are placed.
+- **OQ-9** ~~How generated files reach Windows LightBurn from WSL.~~ **Resolved:** the output
+  directory is a setting in the user's `config.md`, established at onboarding and pointing at a
+  Windows-visible path. Records and deliverables are kept apart. See `design-composition.md` §5.
 - **OQ-10** What the recipe catalogue contains for v1 — which work types, goals and materials
   are declared "needed" — and whether the catalogue is one global list, or differs per machine
   class (a CO2 and a MOPA do not want the same set).
