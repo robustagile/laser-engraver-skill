@@ -26,12 +26,14 @@ later audience, not v1.
 |---|---|---|
 | `claude/requirements.md` | **exists** | What the plugin must do. Numbered requirements with stable IDs, plus the open questions for design. |
 | `claude/design-composition.md` | **exists** | First design pass: delivery, installed layout, the two skills and four commands, how they communicate. |
+| `claude/design-data-formats.md` | **exists** | Second design pass: the shape of every file — machine record, recipe, catalogue, config, regulatory cache, and the JSON spec handed to the generator. |
 | `plugin/` | *not yet* | The plugin itself — `skills/laser-machines/`, `skills/laser-lightburn/`, `commands/`, and the generator. |
 | `plugin/tests/` | *not yet* | The committed test suite, including golden files. |
 | `README.md`, `INSTALL.md`, `STATUS.md` | *not yet* | Human-facing description, installation, and current state. |
 
-Nothing else exists yet. Requirements are gathered and the first design pass is done; the next
-pass decides the **format** of a machine record, a recipe and the catalogue.
+Nothing else exists yet. Requirements are gathered and both design passes are done. What remains
+open needs LightBurn rather than a decision: the two unverified format elements (R-G15), how far
+geometry generation goes in v1 (OQ-7), and which `.lbrn` format version to emit (OQ-8).
 
 **This repository holds no private data** — no machine records, no recipes, no burn readings.
 Real work happens in a separate installation of the plugin; the loop back here is that a problem
@@ -50,6 +52,9 @@ found in real work gets reported, fixed here, and re-installed. (R-D4)
 These were settled in conversation and are recorded with their rationale in
 `claude/requirements.md`. Re-litigating them wastes a session.
 
+- **The unit is part of every field name** — `speed_mm_s`, `depth_um`, never a bare `depth`. The
+  prior work recorded a depth target of "0.01" and could never establish whether it meant
+  millimetres or inches. (`design-data-formats.md` §2)
 - **Two skills, four commands.** `laser-machines` owns equipment, recipes and calibration;
   `laser-lightburn` owns the `.lbrn` format and the generator, and is a service to the first.
   One command per workflow. (`design-composition.md` §3)

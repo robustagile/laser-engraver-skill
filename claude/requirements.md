@@ -406,14 +406,18 @@ never read at run time (R-N4).
   **Resolved:** two skills split by subject matter — `laser-machines` for the domain and
   `laser-lightburn` for the format and the generator — plus four commands, one per workflow. See
   `design-composition.md` §3.
-- **OQ-4** Whether an experiment log is kept separately from promoted recipes, and what promotes
-  a candidate into a recipe (a single good burn, or a repeat).
+- **OQ-4** ~~Whether the experiment log is separate from recipes, and what promotes a
+  candidate.~~ **Resolved:** the log lives inside the recipe file as its `## History` section —
+  a reading only means something attached to the settings that produced it. A candidate becomes
+  `verified` by meeting its acceptance criteria on a **confirmation burn at the final
+  settings**, not on the tuning matrix that produced them. See `design-data-formats.md` §5.
 - **OQ-5** ~~Where the starter recipe set comes from.~~ **Resolved:** no recipes ship at all.
   The plugin ships a catalogue of *which* recipes are needed, and recipes are researched and
   then calibrated per machine — see R-R12 to R-R17.
-- **OQ-6** Primary channel for reporting test results: cell label in text, a photo of the card,
-  or measurements. Photo reading is possible but unreliable for contrast and depth; text is
-  unambiguous but manual.
+- **OQ-6** ~~Primary channel for reporting test results.~~ **Resolved:** text naming the
+  labelled cell is primary; a photo is accepted for gross triage only and never as the basis for
+  `verified`; a measurement is required wherever the criterion is dimensional. See
+  `design-data-formats.md` §5.
 - **OQ-7** How far geometry generation goes in v1: layer settings only, layers plus geometry
   (text with exact character height, primitives, SVG import, arrays), or also variable data.
 - **OQ-8** Whether to keep emitting the older format version (proven to render correctly) or
@@ -424,6 +428,6 @@ never read at run time (R-N4).
 - **OQ-10** What the recipe catalogue contains for v1 — which work types, goals and materials
   are declared "needed" — and whether the catalogue is one global list, or differs per machine
   class (a CO2 and a MOPA do not want the same set).
-- **OQ-11** The re-check policy for cached regulatory findings (R-C2): after how long, or on
-  what trigger, does a cached requirement have to be looked up again before it may be relied on
-  for a compliance job.
+- **OQ-11** ~~The re-check policy for cached regulatory findings.~~ **Resolved:** 12 months —
+  older than that must be looked up again before a compliance job, and the retrieval date is
+  stated every time the requirement is used. See `design-data-formats.md` §8.

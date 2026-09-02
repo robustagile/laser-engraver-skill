@@ -83,8 +83,9 @@ project-level one. The shape is identical either way.
   laser-engraver/                 <- THE USER'S: never touched by the installer
     config.md                       output directory, preferences, LightBurn version
     machines/<machine>.md           one file per machine (R-M1, R-M8, R-R10)
-    recipes/                        recipes per (machine, lens) (R-R4)
-    log/                            burn readings, including negative results (R-R9)
+    recipes/<machine>/<lens>/       one file per line of inquiry, carrying its own
+                                    history of burns (R-R4, R-R9; OQ-4 in formats §5)
+    regulatory/                     cached findings, with retrieval dates (R-C2)
 ```
 
 The data store is named after neither skill, because both read it.
@@ -223,14 +224,12 @@ fixed, he re-installs and carries on. Nothing is migrated in either direction.
 - **R-D4** is reduced accordingly: this repository holds no private data, and the loop with the
   owner's installation is report-fix-reinstall rather than any kind of migration.
 
-## 9. What the next pass has to decide
+## 9. What came next
 
-Deferred here because it depends on the composition above:
+The formats are settled in `design-data-formats.md`: the machine record, the recipe, the
+catalogue, the config, the regulatory cache, and the JSON specification this document called
+for in section 3. That pass also resolved OQ-4, OQ-6 and OQ-11.
 
-- The exact shape of the specification `laser-machines` hands to `laser-lightburn` (section 3).
-- The **format** of a machine record, a recipe, and the catalogue (OQ-4 also lands here: whether
-  the log is separate from the recipes, and what promotes a candidate to verified).
-- **OQ-6** — the channel for reporting test results.
-- **OQ-7** — how far geometry generation goes in v1.
-- **OQ-8** — which `.lbrn` format version to emit.
-- **OQ-11** — the re-check policy for cached regulatory findings.
+Still open after both passes: **OQ-7** (how far geometry generation goes in v1), **OQ-8** (which
+`.lbrn` format version to emit), and **R-G15** — the two format questions that need LightBurn
+rather than a decision.
