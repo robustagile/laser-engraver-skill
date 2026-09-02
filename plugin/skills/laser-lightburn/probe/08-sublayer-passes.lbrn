@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PROBE 08 - does numPasses inside a SubLayer control the contour's passes on its own,
+    independently of the parent layer's numPasses?
+
+    ANSWERED 2026-08-17: yes. LightBurn recognises passes on a sub-layer, so a contour can run a
+    different number of passes from the fill it rides on. Reported from the LightBurn UI rather
+    than from a saved file, so there is no LightBurn-authored artifact pinning it; if one ever
+    turns up, keep it. No need to re-run this probe - it is kept as the record of the question.
+
+    Three identical 30x30 squares, left to right:
+
+      LEFT   (C00, "A FILL1 LINE3") Scan numPasses=1, SubLayer Cut numPasses=3
+      MIDDLE (C01, "B FILL1 LINE1") Scan numPasses=1, SubLayer Cut numPasses=1   <- baseline
+      RIGHT  (C02, "C LINE3 NOFILL") plain Cut numPasses=3, no fill              <- control
+
+    The contour speed is deliberately slow (20 mm/s) and the fill deliberately coarse
+    (1 mm interval at 1000 mm/s), so contour time dominates and the two readings separate:
+
+      honoured      -> A takes about as long as C, and about 3x B's contour
+      not honoured  -> A takes about as long as B, and both far less than C
+
+    C is the control: it pins what three slow passes of the same 120 mm perimeter costs,
+    using the parent numPasses that is already known to be read correctly.
+
+    Reference only - not a job. Do not send this to the machine.
+-->
+<LightBurnProject AppVersion="1.5.06" FormatVersion="1" MaterialHeight="0" MirrorX="False" MirrorY="False">
+    <CutSetting type="Scan">
+        <index Value="0"/>
+        <name Value="A FILL1 LINE3"/>
+        <maxPower Value="20"/>
+        <speed Value="1000"/>
+        <numPasses Value="1"/>
+        <priority Value="0"/>
+        <interval Value="1"/>
+        <SubLayer type="Cut" index="1">
+            <maxPower Value="20"/>
+            <speed Value="20"/>
+            <numPasses Value="3"/>
+        </SubLayer>
+    </CutSetting>
+    <CutSetting type="Scan">
+        <index Value="1"/>
+        <name Value="B FILL1 LINE1"/>
+        <maxPower Value="20"/>
+        <speed Value="1000"/>
+        <numPasses Value="1"/>
+        <priority Value="1"/>
+        <interval Value="1"/>
+        <SubLayer type="Cut" index="1">
+            <maxPower Value="20"/>
+            <speed Value="20"/>
+            <numPasses Value="1"/>
+        </SubLayer>
+    </CutSetting>
+    <CutSetting type="Cut">
+        <index Value="2"/>
+        <name Value="C LINE3 NOFILL"/>
+        <maxPower Value="20"/>
+        <speed Value="20"/>
+        <numPasses Value="3"/>
+        <priority Value="2"/>
+    </CutSetting>
+    <Shape Type="Path" CutIndex="0">
+        <XForm>1 0 0 1 0 0</XForm>
+        <VertList>V15 60V45 60V45 90V15 90</VertList>
+        <PrimList>L0 1L1 2L2 3L3 0</PrimList>
+    </Shape>
+    <Shape Type="Path" CutIndex="1">
+        <XForm>1 0 0 1 0 0</XForm>
+        <VertList>V60 60V90 60V90 90V60 90</VertList>
+        <PrimList>L0 1L1 2L2 3L3 0</PrimList>
+    </Shape>
+    <Shape Type="Path" CutIndex="2">
+        <XForm>1 0 0 1 0 0</XForm>
+        <VertList>V105 60V135 60V135 90V105 90</VertList>
+        <PrimList>L0 1L1 2L2 3L3 0</PrimList>
+    </Shape>
+</LightBurnProject>

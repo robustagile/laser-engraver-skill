@@ -27,14 +27,16 @@ later audience, not v1.
 | `claude/requirements.md` | **exists** | What the plugin must do. Numbered requirements with stable IDs, plus the open questions for design. |
 | `claude/design-composition.md` | **exists** | First design pass: delivery, installed layout, the two skills and four commands, how they communicate. |
 | `claude/design-data-formats.md` | **exists** | Second design pass: the shape of every file — machine record, recipe, catalogue, config, regulatory cache, and the JSON spec handed to the generator. |
-| `plugin/` | *not yet* | The plugin itself — `skills/laser-machines/`, `skills/laser-lightburn/`, `commands/`, and the generator. |
-| `plugin/tests/` | *not yet* | The committed test suite, including golden files. |
+| `plugin/skills/laser-lightburn/` | **partly** | `tools/` — the `.lbrn` writer and the probe generator. `references/lbrn-format.md` — verified versus assumed. `probe/` — the probe register, including the file LightBurn itself saved. No `SKILL.md` yet. |
+| `plugin/skills/laser-machines/` | *not yet* | The domain skill: onboarding, recipes, calibration, troubleshooting, the catalogue. |
+| `plugin/commands/` | *not yet* | The four entry points. |
+| `plugin/tests/` | **exists** | The committed test suite. 32 tests over the writer and the transform maths. |
 | `README.md` | **exists** | What the plugin will do, for a human. Deliberately minimal while it is unbuilt. |
 | `INSTALL.md` | **exists** | Prerequisites, which are real now; deployment, which is marked as not yet available. |
 | `STATUS.md` | **exists** | What exists today, what is open, where to pick up. Read it first in a new session. |
 
-Nothing else exists yet. Requirements are gathered and both design passes are done. What remains
-open needs LightBurn rather than a decision: the two unverified format elements (R-G15), how far
+Requirements are gathered, both design passes are done, and the `.lbrn` writer is imported and
+under test. What remains open needs LightBurn rather than a decision: the two unverified format elements (R-G15), how far
 geometry generation goes in v1 (OQ-7), and which `.lbrn` format version to emit (OQ-8).
 
 **This repository holds no private data** — no machine records, no recipes, no burn readings.

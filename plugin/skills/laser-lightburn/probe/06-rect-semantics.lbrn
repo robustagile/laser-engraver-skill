@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LightBurnProject AppVersion="1.5.06" FormatVersion="1" MaterialHeight="0" MirrorX="False" MirrorY="False">
+    <CutSetting type="Cut">
+        <index Value="0"/>
+        <name Value="C00"/>
+        <maxPower Value="20"/>
+        <speed Value="100"/>
+    </CutSetting>
+    <Shape Type="Path" CutIndex="0">
+        <XForm>1 0 0 1 0 0</XForm>
+        <VertList>V85 110V125 110V125 130V85 130</VertList>
+        <PrimList>L0 1L1 2L2 3L3 0</PrimList>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="40" H="20" Cr="0">
+        <XForm>1 0 0 1 35 120</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="20" H="10" Cr="0">
+        <XForm>1 0 0 1 35 90</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="1" H="1" Cr="0">
+        <XForm>40 0 0 20 35 60</XForm>
+    </Shape>
+</LightBurnProject>

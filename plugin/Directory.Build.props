@@ -1,0 +1,10 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- xUnit v3 runs on Microsoft.Testing.Platform; the .NET 10 SDK requires opting in
+         to it explicitly before the SDK targets are imported, so it lives here rather
+         than in the test project. -->
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+  </PropertyGroup>
+
+</Project>

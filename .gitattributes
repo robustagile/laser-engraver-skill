@@ -55,3 +55,7 @@
 *.dll           binary
 *.exe           binary
 *.snk           binary
+
+# The one file LightBurn itself saved — evidence about the format, kept byte-exact.
+# Never normalised, so what is in the repository is what LightBurn wrote.
+plugin/skills/laser-lightburn/probe/07-fill-line.lbrn -text
