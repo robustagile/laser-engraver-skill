@@ -348,6 +348,17 @@ never read at run time (R-N4).
   and the golden files. Nothing at run time reads from `/mnt/d/engraving/…` or any other path
   outside the repository. That directory is a one-time **source**, not a dependency: once the
   import is done, the plugin must behave identically if it disappears.
+- **R-N6** The repository is edited from **both** Windows (LightBurn, IDE) and WSL (the
+  agent), in one shared working tree. Two consequences are handled in the repository rather
+  than left to be rediscovered:
+  - **Line endings.** The working tree is Windows format (CRLF) via `.gitattributes`, while
+    text is stored with LF, so an EOL-only difference is never a content change and never
+    produces a commit. `git status` may still flag such a file, because it compares against
+    the size cached in the index; `git diff` is authoritative.
+  - **`core.fileMode` must be set to `false` on every clone.** On a `/mnt/*` DrvFs mount
+    every file appears executable, and without this git reports the whole tree as
+    mode-changed. It is local config, so `.gitattributes` cannot carry it — it belongs in
+    the developer setup steps (R-N2).
 - **R-N5** Self-containment is about the plugin's own assets and knowledge. It does not apply
   to the **user's** data — machine records, recipes and generated output legitimately live
   outside the shipped plugin (R-D4, OQ-2). The distinction: shipped content must never depend

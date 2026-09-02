@@ -1,36 +1,57 @@
 # ---------------------------------------------------------------------------
-# The working tree is Windows format: text files are checked out with CRLF.
-# They are stored in the repository with LF, so diffs stay clean whichever
-# platform they were edited on.
+# The working tree is Windows format: text is checked out with CRLF, and stored
+# in the repository with LF. So an end-of-line-only difference is never a
+# content change - `git diff` stays empty and there is nothing to commit, no
+# matter which side last wrote the file. This repository is edited from Windows
+# and from WSL in one shared working tree, which is why that matters.
+#
+# One caveat, worth knowing rather than fighting: `git status` compares a file's
+# size against what the index cached, so a file whose line endings were flipped
+# shows up as ` M` even though `git diff` is empty and a commit would be a
+# no-op. It clears once the file is written with the endings checkout produces,
+# or with `rm <file> && git checkout -- <file>` after committing.
 # ---------------------------------------------------------------------------
 * text=auto eol=crlf
 
-# Must keep LF even on Windows: a shell script with CRLF fails under WSL with
-# a confusing "bad interpreter" error.
-*.sh      text eol=lf
+# .NET sources and project files - Windows format, stated explicitly rather
+# than left to the catch-all above.
+*.cs            text eol=crlf
+*.csproj        text eol=crlf
+*.props         text eol=crlf
+*.targets       text eol=crlf
+*.sln           text eol=crlf
+*.slnx          text eol=crlf
+*.config        text eol=crlf
+*.json          text eol=crlf
+.editorconfig   text eol=crlf
 
-# Windows scripts must keep CRLF.
-*.bat     text eol=crlf
-*.cmd     text eol=crlf
-*.ps1     text eol=crlf
+# Windows scripts.
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+*.ps1           text eol=crlf
 
-# LightBurn project files are XML text. Golden comparison normalises line
-# endings (GoldenCardTests.Normalise), so line endings here are git's business
-# and no test depends on them.
-*.lbrn    text
+# Must keep LF even on Windows: a .sh with CRLF fails under WSL with a
+# "bad interpreter" error that reads as a missing shell rather than as a
+# line-ending problem.
+*.sh            text eol=lf
+
+# LightBurn project files are XML text, consumed by LightBurn on Windows.
+# Golden comparison normalises line endings (GoldenCardTests.Normalise), so no
+# test depends on them.
+*.lbrn          text eol=crlf
 
 # Binary: never converted, never diffed as text.
-*.png     binary
-*.jpg     binary
-*.jpeg    binary
-*.gif     binary
-*.ico     binary
-*.pdf     binary
-*.zip     binary
-*.ezd     binary
-*.ai      binary
-*.ttf     binary
-*.otf     binary
-*.dll     binary
-*.exe     binary
-*.snk     binary
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.ico           binary
+*.pdf           binary
+*.zip           binary
+*.ezd           binary
+*.ai            binary
+*.ttf           binary
+*.otf           binary
+*.dll           binary
+*.exe           binary
+*.snk           binary
