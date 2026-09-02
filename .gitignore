@@ -1,0 +1,42 @@
+# ---------------------------------------------------------------------------
+# Private working area — see claude/requirements.md R-D4
+#
+# Holds real machine records, real recipes and burn results while developing.
+# Never published. Note: this is /test/ (the private area), NOT tests/ (the
+# committed unit and golden test project) — see OQ-1, that collision is still
+# unresolved.
+# ---------------------------------------------------------------------------
+/test/
+
+# ---------------------------------------------------------------------------
+# Generated engraving output — see R-G4: output is disposable, the generator
+# is the source of truth.
+#
+# Deliberately NOT ignoring *.lbrn: probe files and golden reference files are
+# .lbrn and must stay under version control (R-G12, R-G13, R-N1).
+# ---------------------------------------------------------------------------
+out/
+*.lbrn.tmp
+
+# ---------------------------------------------------------------------------
+# .NET build artifacts
+# ---------------------------------------------------------------------------
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+TestResults/
+*.user
+*.suo
+*.nupkg
+project.lock.json
+.vs/
+
+# ---------------------------------------------------------------------------
+# Editors and OS
+# ---------------------------------------------------------------------------
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
