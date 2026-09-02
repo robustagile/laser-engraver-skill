@@ -1,0 +1,36 @@
+# ---------------------------------------------------------------------------
+# The working tree is Windows format: text files are checked out with CRLF.
+# They are stored in the repository with LF, so diffs stay clean whichever
+# platform they were edited on.
+# ---------------------------------------------------------------------------
+* text=auto eol=crlf
+
+# Must keep LF even on Windows: a shell script with CRLF fails under WSL with
+# a confusing "bad interpreter" error.
+*.sh      text eol=lf
+
+# Windows scripts must keep CRLF.
+*.bat     text eol=crlf
+*.cmd     text eol=crlf
+*.ps1     text eol=crlf
+
+# LightBurn project files are XML text. Golden comparison normalises line
+# endings (GoldenCardTests.Normalise), so line endings here are git's business
+# and no test depends on them.
+*.lbrn    text
+
+# Binary: never converted, never diffed as text.
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.ico     binary
+*.pdf     binary
+*.zip     binary
+*.ezd     binary
+*.ai      binary
+*.ttf     binary
+*.otf     binary
+*.dll     binary
+*.exe     binary
+*.snk     binary
