@@ -30,7 +30,7 @@ later audience, not v1.
 | `plugin/skills/laser-lightburn/` | **partly** | `tools/` — the `.lbrn` writer and the probe generator. `references/lbrn-format.md` — verified versus assumed. `probe/` — the probe register, including the file LightBurn itself saved. `SKILL.md` is a skeleton: sections with `TODO` bodies. |
 | `plugin/skills/laser-machines/` | **partly** | `references/catalogue/` — 30 authored entries with acceptance criteria. `references/materials.md` — the material vocabulary. `SKILL.md` and its five reference files are skeletons: sections with `TODO` bodies. |
 | `plugin/commands/` | **skeleton** | The four entry points. Frontmatter and one `TODO` paragraph each. |
-| `install.sh`, `install.ps1` | **exists** | The installers. Copy files, replace skills and commands wholesale, never touch `laser-engraver/`, stamp a `VERSION`. `--link`/`-Link` symlinks instead, for developing the plugin. |
+| `install.sh`, `install.ps1` | **exists** | The installers. Copy files, replace skills and commands wholesale, never touch the data store beside the target, stamp a `VERSION`. `--link`/`-Link` symlinks instead, for developing the plugin. |
 | `plugin/tests/` | **exists** | The committed test suite. 37 tests over the writer and the transform maths. |
 | `README.md` | **exists** | What the plugin will do, for a human. Deliberately minimal while it is unbuilt. |
 | `INSTALL.md` | **exists** | Prerequisites, which are real now; deployment, which is marked as not yet available. |
@@ -126,10 +126,13 @@ These were settled in conversation and are recorded with their rationale in
   LightBurn to rewrite the file in its own current format the moment it saves; that is fine,
   because generated files are write-only and disposable — re-run the generator, never re-read a
   saved file. (OQ-8, R-G3, R-G4)
-- **One data store per installation, and its location is derived from the install**, never
-  configured — the skills resolve it from their own installed path and do not search for it,
-  which is what stops a session spending shell calls to find the user's data. Two installations
-  sharing one record base is deferred, not rejected. (`design-composition.md` §1)
+- **One data store per installation, `laser-skill-data/` beside the install and never inside
+  it.** Claude Code guards writes under a `.claude` directory and no permission rule lifts that
+  guard — measured, R-N10. Its location is derived from the skill's own installed path and never
+  configured or searched for, which is what stops a session spending shell calls to find the
+  user's data. Builds are unaffected: the guard is on the file-writing tools, not the
+  filesystem, so `tools/` still lives under `skills/`. Two installations sharing one record base
+  is deferred, not rejected. (`design-composition.md` §1, §2)
 - **The plugin is fully self-contained.** Inherited material is copied in once; nothing is read
   at run time from a path outside the repository. (R-N4, and R-N5 for the user-data exception)
 - **Safety warnings are proactive**, and enforced in the plugin's instructions rather than

@@ -65,13 +65,21 @@ where `<target>` is either your user-level `.claude` directory, or a project's:
 | `~/.claude` | Available in every directory. Your machines and recipes are shared across all your work. |
 | `<project>/.claude` | Everything stays inside one working folder. Choose this if you keep your user level deliberately spare. |
 
-The installer copies the skills and commands into the target, and **never writes inside your
-data directory** — your machine records, recipes and burn results are yours and are left alone,
-so re-running it to update is safe.
+Your data lives in **`laser-skill-data/` beside the target**, not inside it — `~/laser-skill-data/`
+for a user-level install, `<project>/laser-skill-data/` for a project-level one. One directory
+holds all of it: machines, recipes, burn results, your settings.
 
-If you install into a project, its `.claude` directory is often committed to git. The installer
-prints the `.gitignore` line that keeps your own records out of that history — and says nothing
-when the line is already there.
+It is outside `.claude/` for a reason that was measured rather than guessed: Claude Code guards
+writes anywhere under a `.claude` directory, and no permission rule in your settings lifts that
+guard, so a store in there would need an interactive approval every single session.
+
+The installer copies the skills and commands into the target and **never writes inside your data
+directory** — your machine records, recipes and burn results are yours and are left alone, so
+re-running it to update is safe.
+
+If you install into a project, that store lands in the project's root, which is committed to
+git. The installer prints the `.gitignore` line that keeps your own records out of that history
+— and says nothing when the line is already there.
 
 It reports what it changed, per skill and per command, and records what it installed in a
 `VERSION` file beside each `SKILL.md`, so a re-run can say whether anything moved.
@@ -96,5 +104,5 @@ git pull
 
 ## Uninstalling
 
-Delete the deployed skills and commands from your `.claude`. Your data directory is separate and
-survives; delete it too if you want the recipes gone.
+Delete the deployed skills and commands from your `.claude`. `laser-skill-data/` beside it is
+separate and survives; delete it too if you want the recipes gone.

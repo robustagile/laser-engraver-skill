@@ -28,7 +28,8 @@ housekeeping rules in `CLAUDE.md`.
 - **The installers** — `install.sh` and `install.ps1`, both exercised: user level and project
   level, first install and re-install, the `.gitignore` advice, the developer symlink mode, and
   the installed generator building where it lands. They copy files and nothing else, replace
-  the skills and commands wholesale, never look inside `laser-engraver/`, and stamp a `VERSION`
+  the skills and commands wholesale, never look inside the data store beside the target, and
+  stamp a `VERSION`
   beside each `SKILL.md` (R-N7 to R-N9). A real Claude Code session in a project-level install
   finds both skills and all four commands by description alone, and routes correctly: a machine
   question loads `/laser-machine` and then `laser-machines`, a symptom loads `/laser-fix` and
@@ -36,10 +37,19 @@ housekeeping rules in `CLAUDE.md`.
   than searched for, which was measured: one listing of the derived path replaced the four to
   six blind shell calls the frame provoked, and nothing reached into the clone (R-N4, observed
   in a copy install - a `--link` install cannot show it).
-- **Skill and command skeletons** — both `SKILL.md` files, the seven `references/` files they
-  point at, and the four commands in `plugin/commands/`. Frontmatter, section structure, and a
-  `TODO` per section naming the requirements it has to satisfy. Written for real so far: where
-  the data store is, in both skills. Everything else is still a frame.
+- **`laser-machines`, workflow 1 complete** — `SKILL.md` (safety, provenance, the mandatory
+  test burn, the store, routing by state), `references/onboarding.md` with the machine-record and
+  `config.md` schemas inlined, `lightburn-setup.md`, `calibration.md`, and the `/laser-machine`
+  command. Exercised on the bench: a real session registers a 60 W MOPA and writes a record that
+  matches the schema key for key.
+- **The research half of workflow 2** — `references/recipe-base.md`: coverage from the
+  catalogue, what to search for and in what order, seeding with mandatory provenance, the
+  recipe schema inlined, and how to compute a starting point when research finds nothing. Plus
+  the `/laser-recipes` command. A web-enabled run found the source's own manual and the
+  per-pulse-width frequency table from it.
+- **Skeletons for the rest** — `laser-lightburn/SKILL.md` and its two references, plus the
+  troubleshooting, production and regulatory sections of `laser-machines/SKILL.md`: structure
+  with a `TODO` per section naming the requirements it has to satisfy.
 - **Human-facing docs** — `README.md`, `INSTALL.md`, this file, `CLAUDE.md`.
 
 Deliberately **not** imported from the prior experimental work: the card generators, the lens
@@ -53,9 +63,8 @@ will read, the frame that says which file holds what, and a working way to deplo
 
 ## Open problems
 
-- **The skills are frames, not skills.** Every section of both `SKILL.md` files and of all
-  seven reference files is a `TODO`, so nothing can be invoked. The bodies have to be written,
-  `laser-machines` first.
+- **`laser-lightburn` is still a frame**, as are troubleshooting, production and the
+  regulatory sections of `laser-machines`. Workflow 1 works; nothing else does.
 - **The raster half of OQ-7 does not exist in the writer.** There is no bitmap shape, and the
   `Image` layer type has never been read back in LightBurn's UI, so nothing raster can be
   emitted yet (R-G16). Text is done: live text with the attributes the writer already emits,
@@ -85,16 +94,14 @@ will read, the frame that says which file holds what, and a working way to deplo
 The ordering below is set by what the owner needs **on the day the machine is assembled**, which
 is onboarding and calibration — not file generation.
 
-1. **Fill in `laser-machines/SKILL.md`** and the machine record it writes: registration, then
-   LightBurn setup and calibration (R-W1.1 to R-W1.3). This is the first thing a newly assembled
-   machine actually needs, and the first calibration can be done with geometry drawn in
-   LightBurn by hand — mode 2 — so it does not wait on the generator. With it the bodies of
-   `references/onboarding.md`, `lightburn-setup.md` and `calibration.md`, and of the
-   `/laser-machine` command, so the workflow has a working entry point.
-2. **Get a machine record written.** Discovery, routing, the derived store location and R-N4
-   are all verified on the bench at `~/laser-bench` (project level, outside this repository —
-   `R-D4` keeps records out of it). What no session has done yet is write one: that needs the
-   registration body from step 1, and it is the first evidence the data store works at all.
+1. **Verify workflow 1 in an interactive session, on the machine that is coming.** Everything
+   so far was measured headlessly, and `lightburn-setup.md` carries an explicit warning that its
+   UI specifics were written without LightBurn open. The day the MOPA is on the bench, run
+   registration for real, correct that file from what the owner sees, and let calibration write
+   the first `## Calibration` entry.
+2. **Fill in the troubleshooting body** (R-W4.1). It is the most common way in for this
+   audience, it needs no machine and no generator, and the bench shows a symptom question
+   already routes to it - into a file that is still headings.
 3. **Fill in `laser-lightburn/SKILL.md`** — machinery already behind it. It has to establish where
    the data store is, check for the .NET SDK on first use (R-N8), and carry the one rule that
    must never be missed: an element whose name has not been seen read back in LightBurn's UI

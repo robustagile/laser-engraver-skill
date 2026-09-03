@@ -53,9 +53,10 @@ The skills depend on this: they derive the store from their own installed path a
 to search for it, which is what keeps a session from spending shell calls rediscovering where
 the user's data is. A configurable location would put that back.
 
-**One hazard specific to project level:** a project's `.claude` is often committed. The user's
-machine records, recipes and burn results must not be — so a project-level install prints the
-`.gitignore` line to add, and the skill checks for it before it writes the first record.
+**One hazard specific to project level:** the store lands in the project's root, which is
+committed. The user's machine records, recipes and burn results must not be — so a project-level
+install prints the `.gitignore` line to add, and the skill checks for it before it writes the
+first record.
 
 **No namespace.** Without a marketplace the skill and commands land in the same `~/.claude` as
 everything else the user has, so every name carries a `laser-` prefix.
@@ -87,22 +88,37 @@ project-level one. The shape is identical either way.
     probe/                          format probes + the file LightBurn itself saved (R-G13)
     VERSION
   commands/laser-*.md             <- DISPOSABLE: replaced wholesale on install
-
-  laser-engraver/                 <- THE USER'S: never touched by the installer
-    config.md                       output directory, preferences, LightBurn version
-    machines/<machine>.md           one file per machine (R-M1, R-M8, R-R10)
-    recipes/<machine>/<lens>/       one file per line of inquiry, carrying its own
-                                    history of burns (R-R4, R-R9; OQ-4 in formats §5)
-    regulatory/                     cached findings, with retrieval dates (R-C2)
 ```
 
-The data store is named after neither skill, because both read it.
+The store is **beside** `<target>`, not inside it - `~/laser-skill-data/` for a user-level
+install, `<project>/laser-skill-data/` for a project-level one:
+
+```
+laser-skill-data/                 <- THE USER'S: never touched by the installer
+  config.md                         output directory, preferences, LightBurn version
+  machines/<machine>.md             one file per machine (R-M1, R-M8, R-R10)
+  recipes/<machine>/<lens>/         one file per line of inquiry, carrying its own
+                                    history of burns (R-R4, R-R9; OQ-4 in formats §5)
+  regulatory/                       cached findings, with retrieval dates (R-C2)
+```
+
+It is named after neither skill, because both read it. One directory holds everything the user
+owns; nothing of theirs is ever a second top-level directory.
+
+**It is outside `.claude/` because it cannot be inside it.** Claude Code guards writes anywhere
+under a `.claude` directory. This was measured rather than assumed: a session was refused the
+write with the edit-accepting permission mode, with `Write` named in the allowed tools, and with
+an explicit `permissions.allow` rule in `settings.local.json` - the guard needs an interactive
+approval, so a store in there costs an approval every session and is unwritable from an
+automated one. Builds are unaffected, and that was measured too: `dotnet build` writes `bin/`
+and `obj/` inside `.claude/` without objection, because the guard is on the file-writing tools
+rather than on the filesystem.
 
 **The invariant, and the reason the layout is split this way:** everything under `skills/` and
-`commands/` is disposable and is replaced wholesale by an install;
-everything under `laser-engraver/` belongs to the user and is never written by the installer.
-Two directories, one rule each. Had the user's data lived inside the skill directory, an install
-that replaces that directory would destroy a recipe base that took weeks of burns to build.
+`commands/` is disposable and is replaced wholesale by an install; everything under
+`laser-skill-data/` belongs to the user and is never written by the installer. Two directories,
+one rule each. Had the user's data lived inside the skill directory, an install that replaces
+that directory would destroy a recipe base that took weeks of burns to build.
 
 This resolves **OQ-2** (where personal data live) and **OQ-3** (how the plugin is packaged).
 
@@ -187,8 +203,8 @@ recipes do not — it is the one thing that can be authored ahead of time.
 
 Records and deliverables are different things and go to different places.
 
-- **Records** — machines, recipes, log — live under `~/.claude/laser-engraver/`. Only the agent
-  reads them; they need no visibility from anywhere else.
+- **Records** — machines, recipes, log — live under `~/laser-skill-data/`. Only the agent reads
+  them; they need no visibility from anywhere else.
 - **Generated `.lbrn` files** must be opened by LightBurn, which on this setup runs on Windows
   while the agent runs in WSL and `~` is inside the distribution. So the output directory is a
   **setting in `config.md`**, established during onboarding and pointing at a Windows-visible
@@ -200,7 +216,7 @@ disposable (R-G4).
 ## 6. Updating
 
 `git pull` in the clone, then re-run the install script against the same target. It replaces the
-skill and the commands, leaves `laser-engraver/` alone, and updates `VERSION`. `SKILL.md` compares its
+skill and the commands, leaves `laser-skill-data/` alone, and updates `VERSION`. `SKILL.md` compares its
 `VERSION` against the clone when the clone is reachable, so a stale installation is visible
 rather than silent.
 

@@ -10,7 +10,7 @@
 # Two rules it must never break:
 #
 #   1. Everything under skills\ and commands\ is disposable and is replaced
-#      wholesale. Everything under laser-engraver\ belongs to the user and is
+#      wholesale. The data store beside the target belongs to the user and is
 #      never read, written or looked into by this script. A recipe base is
 #      weeks of test burns; an installer that reached into it would destroy
 #      the one thing the plugin exists to build. (R-N7)
@@ -41,7 +41,7 @@ $source   = $PSScriptRoot
 $payload  = Join-Path $source 'plugin'
 $skills   = @('laser-machines', 'laser-lightburn')
 $commands = @('laser-machine', 'laser-recipes', 'laser-job', 'laser-fix')
-$dataDir  = 'laser-engraver'
+$dataDir  = 'laser-skill-data'
 
 function Show-Usage {
     Write-Host @'
@@ -57,8 +57,8 @@ Usage: .\install.ps1 <target> [-Link]
              symlink. Not for normal use - `git pull` then changes the
              installed plugin underneath you, which is the point of it.
 
-Your machine records, recipes and burn results live in <target>\laser-engraver
-and are never touched. Re-run this to update.
+Your machine records, recipes and burn results live in laser-skill-data beside
+<target>, and are never touched. Re-run this to update.
 '@
 }
 
@@ -81,6 +81,13 @@ foreach ($skill in $skills) {
 
 New-Item -ItemType Directory -Force -Path $Target | Out-Null
 $Target = (Resolve-Path -LiteralPath $Target).ProviderPath.TrimEnd('\')
+
+# The store is the target's sibling, not something inside it: Claude Code guards
+# writes anywhere under a .claude directory, a permissions rule in settings does
+# not lift that guard, and a store in there could not be written without an
+# interactive approval every session - nor at all from an automated one.
+# Measured, not assumed.
+$dataPath = Join-Path (Split-Path -Parent $Target) $dataDir
 
 if ((Split-Path -Leaf $Target) -ne '.claude') {
     Write-Host "Note: $Target is not named .claude. Installing there anyway - but if"
@@ -248,7 +255,6 @@ Get-ChildItem -LiteralPath $commandsRoot -Filter 'laser-*.md' -File -ErrorAction
 
 # --- the user's data directory: named, never touched ----------------------
 
-$dataPath = Join-Path $Target $dataDir
 Write-Host ''
 if (Test-Path -LiteralPath $dataPath -PathType Container) {
     Write-Host 'Your data directory is where it was, untouched:'
@@ -274,9 +280,9 @@ if (-not $userLevel) {
             $repoNative = $repo.Replace('/', [IO.Path]::DirectorySeparatorChar)
             $relative   = $dataPath.Substring($repoNative.Length).TrimStart('\', '/').Replace('\', '/')
             Write-Host ''
-            Write-Host 'This .claude is inside a git repository, and a project''s .claude is'
-            Write-Host 'commonly committed. Your machine records and burn results should not'
-            Write-Host "be. Add this to $repoNative\.gitignore:"
+            Write-Host 'Your data store lands in a git repository, at its root. Machine'
+            Write-Host 'records and burn results do not belong in a project''s history.'
+            Write-Host "Add this to $repoNative\.gitignore:"
             Write-Host ''
             Write-Host "  $relative/"
         }

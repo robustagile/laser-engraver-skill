@@ -480,7 +480,14 @@ never read at run time (R-N4).
   the thing that checks whether .NET is present.
 - **R-N9** Both install scopes are supported: user level (`~/.claude`) and project level
   (`<project>/.claude`). A project-level install must keep the user's records out of the
-  project's git history, since a project's `.claude` is commonly committed.
+  project's git history, since the data store sits beside the install — at the project's root
+  for a project-level one, which is committed.
+- **R-N10** **The data store is a sibling of the install, never inside it.** Claude Code guards
+  writes anywhere under a `.claude` directory, and no permission rule lifts that guard: a store
+  in there costs an interactive approval every session and cannot be written from an automated
+  one at all. Measured, not inferred — see `design-composition.md` §2. Builds are unaffected,
+  because the guard is on the file-writing tools rather than on the filesystem, which is why the
+  generator can still live under `skills/` and be built where it lands.
 - **R-N5** Self-containment is about the plugin's own assets and knowledge. It does not apply
   to the **user's** data — machine records, recipes and generated output legitimately live
   outside the shipped plugin (R-D4, OQ-2). The distinction: shipped content must never depend

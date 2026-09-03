@@ -57,11 +57,13 @@ TODO: the JSON handed to the generator. `design-data-formats.md` §7.
 
 Field size, spot size and the frequency ceiling come from the machine record, not from the
 conversation (R-G10). It is where `laser-machines` put it, and that location is **derived, never
-searched for**: this skill is installed at `<claude>/skills/laser-lightburn/`, so the record is
-`<claude>/laser-engraver/machines/<id>.md` and the recipes are under
-`<claude>/laser-engraver/recipes/<machine>/<lens>/`.
+searched for**: this skill is installed at `<install>/skills/laser-lightburn/`, where
+`<install>` is a `.claude` directory, and the store is that directory's sibling
+`<install>/../laser-skill-data/`. So the record is `<store>/machines/<id>.md` and the recipes are
+under `<store>/recipes/<machine>/<lens>/`.
 
-Resolve `<claude>` once from the path this file was loaded from. Do not `find` for the store, do
+Resolve it once from the path this file was loaded from. It sits outside `.claude/` on purpose -
+Claude Code guards writes in there, and a settings rule does not lift the guard. Do not `find` for the store, do
 not sweep the home directory, and do not read the plugin's development clone even when this
 skill directory is a symlink into one (R-N4).
 

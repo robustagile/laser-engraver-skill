@@ -10,7 +10,7 @@
 # Two rules it must never break:
 #
 #   1. Everything under skills/ and commands/ is disposable and is replaced
-#      wholesale. Everything under laser-engraver/ belongs to the user and is
+#      wholesale. The data store beside the target belongs to the user and is
 #      never read, written or looked into by this script. A recipe base is
 #      weeks of test burns; an installer that reached into it would destroy
 #      the one thing the plugin exists to build. (R-N7)
@@ -25,7 +25,7 @@ SOURCE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PAYLOAD="$SOURCE/plugin"
 SKILLS=(laser-machines laser-lightburn)
 COMMANDS=(laser-machine laser-recipes laser-job laser-fix)
-DATA_DIR=laser-engraver
+DATA_DIR=laser-skill-data
 
 usage() {
   cat <<'USAGE'
@@ -40,8 +40,8 @@ Usage: ./install.sh <target> [--link]
              Not for normal use - `git pull` then changes the installed
              plugin underneath you, which is the point of it.
 
-Your machine records, recipes and burn results live in <target>/laser-engraver
-and are never touched. Re-run this to update.
+Your machine records, recipes and burn results live in laser-skill-data beside
+<target>, and are never touched. Re-run this to update.
 USAGE
 }
 
@@ -81,6 +81,13 @@ done
 
 mkdir -p -- "$TARGET"
 TARGET="$(cd -- "$TARGET" && pwd)"
+
+# The store is the target's sibling, not something inside it: Claude Code guards
+# writes anywhere under a .claude directory, a permissions rule in settings does
+# not lift that guard, and a store in there could not be written without an
+# interactive approval every session - nor at all from an automated one.
+# Measured, not assumed.
+STORE="$(dirname -- "$TARGET")/$DATA_DIR"
 
 if [ "$(basename -- "$TARGET")" != ".claude" ]; then
   echo "Note: $TARGET is not named .claude. Installing there anyway - but if"
@@ -196,11 +203,11 @@ shopt -u nullglob
 # --- the user's data directory: named, never touched ----------------------
 
 echo
-if [ -d "$TARGET/$DATA_DIR" ]; then
+if [ -d "$STORE" ]; then
   echo "Your data directory is where it was, untouched:"
-  echo "  $TARGET/$DATA_DIR"
+  echo "  $STORE"
 else
-  echo "Your data will live in $TARGET/$DATA_DIR"
+  echo "Your data will live in $STORE"
   echo "  - it does not exist yet; the skill creates it the first time it has"
   echo "    something of yours to write."
 fi
@@ -210,15 +217,15 @@ fi
 if [ "$TARGET" != "$HOME/.claude" ]; then
   repo="$(git -C "$TARGET" rev-parse --show-toplevel 2>/dev/null || true)"
   if [ -n "$repo" ]; then
-    rel="${TARGET#"$repo"/}/$DATA_DIR/"
+    rel="${STORE#"$repo"/}/"
     # The trailing slash matters: a directory-only pattern is not matched by
     # check-ignore unless the queried path carries one, and this directory
     # usually does not exist yet at install time.
-    if ! git -C "$repo" check-ignore -q "$TARGET/$DATA_DIR/" 2>/dev/null; then
+    if ! git -C "$repo" check-ignore -q "$STORE/" 2>/dev/null; then
       echo
-      echo "This .claude is inside a git repository, and a project's .claude is"
-      echo "commonly committed. Your machine records and burn results should not"
-      echo "be. Add this to $repo/.gitignore:"
+      echo "Your data store lands in a git repository, at its root. Machine"
+      echo "records and burn results do not belong in a project's history."
+      echo "Add this to $repo/.gitignore:"
       echo
       echo "  $rel"
     fi

@@ -80,9 +80,15 @@ wavelength_nm: 1064
 wavelength_nm_source: researched
 source_vendor: JPT
 machine_vendor: unknown
+machine_model: unknown
+controller: unknown            # the board - R-W1.3 turns on identifying it
 frequency_min_khz: 1
-frequency_max_khz: 4000
-pulse_width_ns: [2, 4, 8, 15, 30, 60, 100, 200, 350, 500]
+frequency_max_khz: 4000        # the source's envelope - see below, it is not reachable at
+                               # every pulse width
+pulse_widths:                  # illustrative values; the real table is the source's own
+  - { ns: 2,  cutoff_khz: 1950, max_khz: 4000 }
+  - { ns: 13, cutoff_khz: 412,  max_khz: 3000 }
+  - { ns: 200, cutoff_khz: 30,  max_khz: 600 }
 axis_y: up
 origin: bottom-left
 lenses:
@@ -92,14 +98,54 @@ lenses:
     field_y_mm: 110
     spot_mm: 0.03
     spot_mm_source: estimated
-tooling: [rotary, air-assist, extraction]
+tooling:                       # a map rather than a list: "unknown" and "no" are different
+  rotary: yes                   # answers, and for extraction the difference is a safety one
+  air_assist: yes
+  extraction: unknown
+  autofocus: no
+  z_axis: yes
 ---
 ```
+
+**A MOPA's frequency ceiling is a property of the pulse width, not of the machine.** This was
+found while registering a real 60 W MOPA: its source manual publishes a fixed list of selectable
+pulse widths and, for each one, two frequencies — the **cut-off**, above which the energy per
+pulse starts to fall, and the **maximum** the source will accept at all. At the shortest width
+the ceiling was the full envelope; at 200 ns it was a fraction of it. A single
+`frequency_max_khz` would let a candidate recipe be validated against a frequency this machine
+cannot deliver at the pulse width the recipe calls for — which is precisely the check
+`recipe-base.md` performs before seeding.
+
+So `frequency_min_khz` and `frequency_max_khz` stay as the source's envelope, and
+`pulse_widths` carries the real per-width limits. Two further consequences worth writing down,
+both from the same manual:
+
+- The selectable widths are a **fixed list**, and a value typed in between two of them is
+  rounded by the source to the nearest one. A recipe carrying an unavailable `pulse_width_ns` is
+  not a recipe for this machine.
+- `cutoff_khz` is what explains a machine that stops getting darker as frequency rises: above
+  it, more pulses each carry less energy. That belongs in a recipe's `## Failure modes` rather
+  than being rediscovered per material.
+
+A plain fiber source has no `pulse_widths` at all — its pulse width is whatever it is — and a
+CO2 has neither. The key is present only where the machine has the lever.
 
 `state` is the ladder from composition §4: `registered` -> `configured` -> `calibrated`. It
 advances on evidence, not on intent: `configured` means LightBurn talks to the machine and a
 device profile exists; `calibrated` means a commanded size was measured on material and matched,
 and the red-dot frame agreed with the mark.
+
+A `<fact>_source` key says what **kind** of knowledge a value is - `owner-stated`, `derived`,
+`researched`, `estimated`, `measured` - and `## Provenance` carries the URL and date for the
+researched ones. Not redundant: the key is what a later session reads to decide whether to trust
+a number, the section is how it checks where that number came from.
+
+**The schema is repeated inside the skill, in `references/onboarding.md`.** That is deliberate
+duplication rather than an oversight: this document is not installed, so a skill that cited it
+would be citing something it cannot read. It was found the hard way - a session with the field
+list only in here invented `output_dir` for `output_directory`, and two machines registered in
+two sessions would not have had the same keys. This document holds the reasoning; the shipped
+reference holds the authority.
 
 Fixed body sections, so the agent can find them without reading the whole file:
 
@@ -266,7 +312,7 @@ Two things flow into the generator, and they are deliberately different in kind:
 {
   "kind": "test-card",
   "card": "power-speed-matrix",
-  "machineRecord": "~/.claude/laser-engraver/machines/mopa-60w.md",
+  "machineRecord": "~/laser-skill-data/machines/mopa-60w.md",
   "lens": "f110",
   "output": "D:/engraving/out/mopa-60w-stainless-matrix.lbrn",
   "axes": [
