@@ -30,8 +30,39 @@ TODO: R-W2.5. Resist taking a number from the internet straight to a workpiece.
 
 ## Where the data lives
 
-TODO: locating `laser-engraver/` beside the install, the project-level `.gitignore` check,
-`config.md`. `design-composition.md` §2, `design-data-formats.md` §6.
+Everything the owner has — machine records, recipes, regulatory findings, their settings — is in
+one directory, and **its location is derived, never searched for**. This skill is installed at
+`<claude>/skills/laser-machines/`, so the store is:
+
+```
+<claude>/laser-engraver/
+  config.md                          output directory, LightBurn version, default machine
+  machines/<id>.md                   one per machine
+  recipes/<machine>/<lens>/<id>.md   one per line of inquiry, with its own burn history
+  regulatory/                        cached findings, each with the date it was retrieved
+```
+
+Resolve `<claude>` once, from the path this file was loaded from, and use it for the rest of the
+session.
+
+**Do not go looking for it.** A `find` for `laser-engraver`, a sweep of the home directory, a
+look into the plugin's own repository — all wrong, and the last one is forbidden outright: if
+this skill directory is a symlink into a development clone, the clone is still not somewhere to
+read from at run time (R-N4). Listing `<claude>/laser-engraver/machines/` is the whole of
+discovery.
+
+**Its absence is an answer, not a problem to investigate.** No `laser-engraver/` means no
+machine has ever been registered here; an empty `machines/` means the same. Say so, offer
+`/laser-machine`, and make it explicit that anything said before a machine record exists rests
+on what the owner tells you in this conversation and on nothing recorded. Neither absence is a
+reason to search somewhere else.
+
+**Nothing creates it but a real write.** The installer never touches it (R-N7). This skill
+creates it at the moment it first has something of the owner's to keep — not in advance, and not
+to test whether it could.
+
+A project-level `.claude` is commonly committed to git, so before the first write check that the
+store is ignored, and give the `.gitignore` line if it is not (R-N9).
 
 ## Routing by the state that is found
 

@@ -29,11 +29,17 @@ housekeeping rules in `CLAUDE.md`.
   level, first install and re-install, the `.gitignore` advice, the developer symlink mode, and
   the installed generator building where it lands. They copy files and nothing else, replace
   the skills and commands wholesale, never look inside `laser-engraver/`, and stamp a `VERSION`
-  beside each `SKILL.md` (R-N7 to R-N9).
+  beside each `SKILL.md` (R-N7 to R-N9). A real Claude Code session in a project-level install
+  finds both skills and all four commands by description alone, and routes correctly: a machine
+  question loads `/laser-machine` and then `laser-machines`, a symptom loads `/laser-fix` and
+  then `laser-machines`. Both skills state where the data store is and that it is derived rather
+  than searched for, which was measured: one listing of the derived path replaced the four to
+  six blind shell calls the frame provoked, and nothing reached into the clone (R-N4, observed
+  in a copy install - a `--link` install cannot show it).
 - **Skill and command skeletons** — both `SKILL.md` files, the seven `references/` files they
-  point at, and the four commands in `plugin/commands/`. Frontmatter and section structure
-  only: every body is a `TODO` naming the requirements it has to satisfy. The frames settle
-  which file holds what; none of them does anything yet.
+  point at, and the four commands in `plugin/commands/`. Frontmatter, section structure, and a
+  `TODO` per section naming the requirements it has to satisfy. Written for real so far: where
+  the data store is, in both skills. Everything else is still a frame.
 - **Human-facing docs** — `README.md`, `INSTALL.md`, this file, `CLAUDE.md`.
 
 Deliberately **not** imported from the prior experimental work: the card generators, the lens
@@ -50,6 +56,11 @@ will read, the frame that says which file holds what, and a working way to deplo
 - **The skills are frames, not skills.** Every section of both `SKILL.md` files and of all
   seven reference files is a `TODO`, so nothing can be invoked. The bodies have to be written,
   `laser-machines` first.
+- **The config escape hatch has no field.** `design-composition.md` §1 says `config.md` can
+  point the store elsewhere, so that a project-level install can share one record base; the
+  config format in `design-data-formats.md` §3 has no key for it. The skills now derive the
+  store location and are told not to search, which is what makes them cheap — so the redirect
+  has to be an explicit field or be dropped, and until it is one of the two documents is wrong.
 - **The raster half of OQ-7 does not exist in the writer.** There is no bitmap shape, and the
   `Image` layer type has never been read back in LightBurn's UI, so nothing raster can be
   emitted yet (R-G16). Text is done: live text with the attributes the writer already emits,
@@ -85,10 +96,10 @@ is onboarding and calibration — not file generation.
    LightBurn by hand — mode 2 — so it does not wait on the generator. With it the bodies of
    `references/onboarding.md`, `lightburn-setup.md` and `calibration.md`, and of the
    `/laser-machine` command, so the workflow has a working entry point.
-2. **Deploy it for real and invoke it.** The installers are tested against the filesystem but
-   never against Claude Code: nothing has yet checked that an installed skill is discovered by
-   its description, that a command runs, or that a machine record lands in the data store
-   beside it. That is the first end-to-end evidence the plugin exists.
+2. **Get a machine record written.** Discovery, routing, the derived store location and R-N4
+   are all verified on the bench at `~/laser-bench` (project level, outside this repository —
+   `R-D4` keeps records out of it). What no session has done yet is write one: that needs the
+   registration body from step 1, and it is the first evidence the data store works at all.
 3. **Fill in `laser-lightburn/SKILL.md`** — machinery already behind it. It has to establish where
    the data store is, check for the .NET SDK on first use (R-N8), and carry the one rule that
    must never be missed: an element whose name has not been seen read back in LightBurn's UI

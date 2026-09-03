@@ -55,8 +55,21 @@ TODO: the JSON handed to the generator. `design-data-formats.md` §7.
 
 ## Reading the machine record
 
-TODO: R-G10 - field size, spot, frequency ceiling come from the record, not from the
-conversation.
+Field size, spot size and the frequency ceiling come from the machine record, not from the
+conversation (R-G10). It is where `laser-machines` put it, and that location is **derived, never
+searched for**: this skill is installed at `<claude>/skills/laser-lightburn/`, so the record is
+`<claude>/laser-engraver/machines/<id>.md` and the recipes are under
+`<claude>/laser-engraver/recipes/<machine>/<lens>/`.
+
+Resolve `<claude>` once from the path this file was loaded from. Do not `find` for the store, do
+not sweep the home directory, and do not read the plugin's development clone even when this
+skill directory is a symlink into one (R-N4).
+
+If the record is not there, nothing here can be generated: a card or a job needs a field size it
+must not invent. Say which machine is missing and hand back to `/laser-machine`.
+
+TODO: which fields each kind of output needs, and what to do when one of them is still unknown
+in the record.
 
 ## Test cards
 
