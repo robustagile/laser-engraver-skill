@@ -25,6 +25,10 @@ housekeeping rules in `CLAUDE.md`.
 - **The recipe catalogue** — `plugin/skills/laser-machines/references/catalogue/`, 30 entries
   across seven works and seven materials, each carrying acceptance criteria and how to verify
   them, plus the material vocabulary in `references/materials.md`.
+- **Skill and command skeletons** — both `SKILL.md` files, the seven `references/` files they
+  point at, and the four commands in `plugin/commands/`. Frontmatter and section structure
+  only: every body is a `TODO` naming the requirements it has to satisfy. The frames settle
+  which file holds what; none of them does anything yet.
 - **Human-facing docs** — `README.md`, `INSTALL.md`, this file, `CLAUDE.md`.
 
 Deliberately **not** imported from the prior experimental work: the card generators, the lens
@@ -32,13 +36,15 @@ and machine constants, and their golden files. All of those encode the retired m
 numbers and its cards' geometry, and the cards will be redesigned for the MOPA and the CO2. The
 Arial advance-width table is machine-independent and can be brought over when cards are written.
 
-**No skill or command file exists yet**, so nothing is installable and neither skill can be
-invoked. What exists is the machinery they will call and the catalogue they will read.
+**No skill body is written yet**, so neither skill can be invoked and there is nothing worth
+installing. What exists is the machinery they will call, the catalogue they will read, and the
+frame that says which file holds what.
 
 ## Open problems
 
-- **No skill or command file exists**, so nothing is installable and neither skill can be
-  invoked. What exists is the machinery they will call.
+- **The skills are frames, not skills.** Every section of both `SKILL.md` files and of all
+  seven reference files is a `TODO`, so nothing can be invoked. The bodies have to be written,
+  `laser-machines` first.
 - **No install scripts** (R-N7 to R-N9), so the plugin cannot be deployed into a `.claude` and
   tried for real.
 - **The raster half of OQ-7 does not exist in the writer.** There is no bitmap shape, and the
@@ -70,19 +76,20 @@ invoked. What exists is the machinery they will call and the catalogue they will
 The ordering below is set by what the owner needs **on the day the machine is assembled**, which
 is onboarding and calibration — not file generation.
 
-**The install scripts cannot come first.** A skill directory without a `SKILL.md` is not a skill:
-deploying what exists today would copy `references/`, `tools/` and `probe/` into a `.claude` and
-produce nothing invocable. There is something to install once there is something to invoke.
+**The install scripts cannot come first.** A `SKILL.md` whose every section is a `TODO` is not
+yet a skill: deploying today would copy frames into a `.claude` and produce nothing that works.
+There is something to install once there is something to invoke.
 
-1. **Write `laser-machines/SKILL.md`** and the machine record it writes: registration, then
+1. **Fill in `laser-machines/SKILL.md`** and the machine record it writes: registration, then
    LightBurn setup and calibration (R-W1.1 to R-W1.3). This is the first thing a newly assembled
    machine actually needs, and the first calibration can be done with geometry drawn in
-   LightBurn by hand — mode 2 — so it does not wait on the generator. One command with it,
-   `/laser-machine`, so the workflow has an entry point.
+   LightBurn by hand — mode 2 — so it does not wait on the generator. With it the bodies of
+   `references/onboarding.md`, `lightburn-setup.md` and `calibration.md`, and of the
+   `/laser-machine` command, so the workflow has a working entry point.
 2. **Write the install scripts** (R-N7 to R-N9), which now have a real payload, and deploy for
    the first time. The install is only verified when the installed skill can be invoked and
    writes a machine record in the data store beside it.
-3. **Write `laser-lightburn/SKILL.md`** — machinery already behind it. It has to establish where
+3. **Fill in `laser-lightburn/SKILL.md`** — machinery already behind it. It has to establish where
    the data store is, check for the .NET SDK on first use (R-N8), and carry the one rule that
    must never be missed: an element whose name has not been seen read back in LightBurn's UI
    must not be emitted.

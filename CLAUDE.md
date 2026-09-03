@@ -27,9 +27,9 @@ later audience, not v1.
 | `claude/requirements.md` | **exists** | What the plugin must do. Numbered requirements with stable IDs, plus the open questions for design. |
 | `claude/design-composition.md` | **exists** | First design pass: delivery, installed layout, the two skills and four commands, how they communicate. |
 | `claude/design-data-formats.md` | **exists** | Second design pass: the shape of every file — machine record, recipe, catalogue, config, regulatory cache, and the JSON spec handed to the generator. |
-| `plugin/skills/laser-lightburn/` | **partly** | `tools/` — the `.lbrn` writer and the probe generator. `references/lbrn-format.md` — verified versus assumed. `probe/` — the probe register, including the file LightBurn itself saved. No `SKILL.md` yet. |
-| `plugin/skills/laser-machines/` | **partly** | `references/catalogue/` — 30 authored entries with acceptance criteria. `references/materials.md` — the material vocabulary. No `SKILL.md` yet. |
-| `plugin/commands/` | *not yet* | The four entry points. |
+| `plugin/skills/laser-lightburn/` | **partly** | `tools/` — the `.lbrn` writer and the probe generator. `references/lbrn-format.md` — verified versus assumed. `probe/` — the probe register, including the file LightBurn itself saved. `SKILL.md` is a skeleton: sections with `TODO` bodies. |
+| `plugin/skills/laser-machines/` | **partly** | `references/catalogue/` — 30 authored entries with acceptance criteria. `references/materials.md` — the material vocabulary. `SKILL.md` and its five reference files are skeletons: sections with `TODO` bodies. |
+| `plugin/commands/` | **skeleton** | The four entry points. Frontmatter and one `TODO` paragraph each. |
 | `plugin/tests/` | **exists** | The committed test suite. 37 tests over the writer and the transform maths. |
 | `README.md` | **exists** | What the plugin will do, for a human. Deliberately minimal while it is unbuilt. |
 | `INSTALL.md` | **exists** | Prerequisites, which are real now; deployment, which is marked as not yet available. |
@@ -37,9 +37,9 @@ later audience, not v1.
 
 Requirements are gathered, both design passes are done, and the `.lbrn` writer is imported,
 under test, and verified against LightBurn for every element it emits (R-G15 settled). What
-remains is building the skills themselves — neither `SKILL.md` exists, and there are no install
-scripts, so nothing is installable yet. The catalogue is authored (OQ-10 resolved); no design
-question is open.
+remains is writing the skills themselves — both `SKILL.md` files and every reference file exist
+as skeletons with `TODO` bodies, and there are no install scripts, so nothing is installable
+yet. The catalogue is authored (OQ-10 resolved); no design question is open.
 
 **This repository holds no private data** — no machine records, no recipes, no burn readings.
 Real work happens in a separate installation of the plugin; the loop back here is that a problem
