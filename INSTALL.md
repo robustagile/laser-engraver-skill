@@ -1,8 +1,9 @@
 # Installing
 
-> **Not yet possible.** The plugin is still being written, and there is nothing to deploy. The
-> prerequisites below are real and can be done now; the deployment step at the end describes
-> what it *will* be. See [STATUS.md](STATUS.md).
+> **The installer works; the plugin does not yet.** Deploying is real and safe to do now, but
+> what lands in your `.claude` is still a frame — the skills have their structure and none of
+> their content, so neither can actually do anything. Install it to check the plumbing, not to
+> engrave. See [STATUS.md](STATUS.md).
 
 ## Prerequisites
 
@@ -50,9 +51,7 @@ cd laser-engraver-skill
 The clone is needed to install and to update. Nothing reads from it while the plugin runs, so it
 can live anywhere — but do not delete it if you want updates.
 
-## Deploying — *not available yet*
-
-The intended shape, so you know what is coming:
+## Deploying
 
 ```
 ./install.sh  <target>        # Linux, macOS, WSL
@@ -71,16 +70,31 @@ data directory** — your machine records, recipes and burn results are yours an
 so re-running it to update is safe.
 
 If you install into a project, its `.claude` directory is often committed to git. The installer
-will print the `.gitignore` line that keeps your own records out of that history.
+prints the `.gitignore` line that keeps your own records out of that history — and says nothing
+when the line is already there.
 
-## Updating — *not available yet*
+It reports what it changed, per skill and per command, and records what it installed in a
+`VERSION` file beside each `SKILL.md`, so a re-run can say whether anything moved.
+
+### Developing the plugin itself
+
+```
+./install.sh  <target> --link
+.\install.ps1 <target> -Link
+```
+
+Symlinks the skills to your clone instead of copying them, so an edit takes effect with no
+re-install. On Windows this needs developer mode or an elevated prompt. Do not use it for
+ordinary use: `git pull` then changes the installed plugin underneath you.
+
+## Updating
 
 ```
 git pull
 ./install.sh <the same target>
 ```
 
-## Uninstalling — *not available yet*
+## Uninstalling
 
 Delete the deployed skills and commands from your `.claude`. Your data directory is separate and
 survives; delete it too if you want the recipes gone.

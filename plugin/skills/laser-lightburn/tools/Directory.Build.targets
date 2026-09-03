@@ -1,0 +1,7 @@
+<Project>
+
+  <!-- Deliberately empty. The same reason as Directory.Build.props beside it:
+       it stops MSBuild's upward walk at the root of the installed payload, so
+       nothing above the plugin can change how the generator is built. -->
+
+</Project>

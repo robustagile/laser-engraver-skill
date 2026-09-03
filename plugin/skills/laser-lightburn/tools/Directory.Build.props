@@ -1,0 +1,14 @@
+<Project>
+
+  <!-- Deliberately empty, and it must stay in place.
+
+       MSBuild walks up from a project directory until it finds a
+       Directory.Build.props, and after installation these projects sit inside
+       the user's .claude - so without this file the walk would continue into
+       their home directory and quietly pick up whatever build properties it
+       found there. The generator would then build differently on their machine
+       than it does here, for a reason nothing in the output would name.
+
+       This stops the walk at the root of the installed payload (R-N4). -->
+
+</Project>
