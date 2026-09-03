@@ -30,7 +30,7 @@ later audience, not v1.
 | `plugin/skills/laser-lightburn/` | **partly** | `tools/` — the `.lbrn` writer and the probe generator. `references/lbrn-format.md` — verified versus assumed. `probe/` — the probe register, including the file LightBurn itself saved. No `SKILL.md` yet. |
 | `plugin/skills/laser-machines/` | **partly** | `references/catalogue/` — 30 authored entries with acceptance criteria. `references/materials.md` — the material vocabulary. No `SKILL.md` yet. |
 | `plugin/commands/` | *not yet* | The four entry points. |
-| `plugin/tests/` | **exists** | The committed test suite. 32 tests over the writer and the transform maths. |
+| `plugin/tests/` | **exists** | The committed test suite. 37 tests over the writer and the transform maths. |
 | `README.md` | **exists** | What the plugin will do, for a human. Deliberately minimal while it is unbuilt. |
 | `INSTALL.md` | **exists** | Prerequisites, which are real now; deployment, which is marked as not yet available. |
 | `STATUS.md` | **exists** | What exists today, what is open, where to pick up. Read it first in a new session. |
@@ -156,3 +156,6 @@ Full detail, including which format facts are verified and which are still assum
   it compares against the size cached in the index — **`git diff` is the authoritative check.**
 - The repository is edited from Windows and from WSL in **one shared working tree**. Generated
   `.lbrn` files must land where LightBurn on the Windows side can open them.
+- **Run the tests with `dotnet run --project tests/LightBurn.Format.Tests`, not `dotnet test`.**
+  The suite is xUnit v3 with its in-process runner; `dotnet test` reports "Zero tests ran" and
+  exits non-zero, which looks like a broken suite and is not one. 37 tests, all passing.
