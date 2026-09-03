@@ -70,12 +70,18 @@ invoked. What exists is the machinery they will call and the catalogue they will
 The ordering below is set by what the owner needs **on the day the machine is assembled**, which
 is onboarding and calibration — not file generation.
 
-1. **Write the install scripts** (R-N7 to R-N9). Nothing else can be tried at all until the
-   plugin can be deployed into a `.claude`, so this comes before more content.
-2. **Write `laser-machines/SKILL.md`** and the machine record it writes: registration, then
-   LightBurn setup and calibration (R-W1.1 to R-W1.3). This is the first thing a newly
-   assembled machine actually needs, and the first calibration can be done with geometry drawn
-   in LightBurn by hand — mode 2 — so it does not wait on the generator.
+**The install scripts cannot come first.** A skill directory without a `SKILL.md` is not a skill:
+deploying what exists today would copy `references/`, `tools/` and `probe/` into a `.claude` and
+produce nothing invocable. There is something to install once there is something to invoke.
+
+1. **Write `laser-machines/SKILL.md`** and the machine record it writes: registration, then
+   LightBurn setup and calibration (R-W1.1 to R-W1.3). This is the first thing a newly assembled
+   machine actually needs, and the first calibration can be done with geometry drawn in
+   LightBurn by hand — mode 2 — so it does not wait on the generator. One command with it,
+   `/laser-machine`, so the workflow has an entry point.
+2. **Write the install scripts** (R-N7 to R-N9), which now have a real payload, and deploy for
+   the first time. The install is only verified when the installed skill can be invoked and
+   writes a machine record in the data store beside it.
 3. **Write `laser-lightburn/SKILL.md`** — machinery already behind it. It has to establish where
    the data store is, check for the .NET SDK on first use (R-N8), and carry the one rule that
    must never be missed: an element whose name has not been seen read back in LightBurn's UI
