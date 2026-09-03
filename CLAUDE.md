@@ -126,6 +126,10 @@ These were settled in conversation and are recorded with their rationale in
   LightBurn to rewrite the file in its own current format the moment it saves; that is fine,
   because generated files are write-only and disposable — re-run the generator, never re-read a
   saved file. (OQ-8, R-G3, R-G4)
+- **One data store per installation, and its location is derived from the install**, never
+  configured — the skills resolve it from their own installed path and do not search for it,
+  which is what stops a session spending shell calls to find the user's data. Two installations
+  sharing one record base is deferred, not rejected. (`design-composition.md` §1)
 - **The plugin is fully self-contained.** Inherited material is copied in once; nothing is read
   at run time from a path outside the repository. (R-N4, and R-N5 for the user-data exception)
 - **Safety warnings are proactive**, and enforced in the plugin's instructions rather than

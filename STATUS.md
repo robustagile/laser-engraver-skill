@@ -56,11 +56,6 @@ will read, the frame that says which file holds what, and a working way to deplo
 - **The skills are frames, not skills.** Every section of both `SKILL.md` files and of all
   seven reference files is a `TODO`, so nothing can be invoked. The bodies have to be written,
   `laser-machines` first.
-- **The config escape hatch has no field.** `design-composition.md` §1 says `config.md` can
-  point the store elsewhere, so that a project-level install can share one record base; the
-  config format in `design-data-formats.md` §3 has no key for it. The skills now derive the
-  store location and are told not to search, which is what makes them cheap — so the redirect
-  has to be an explicit field or be dropped, and until it is one of the two documents is wrong.
 - **The raster half of OQ-7 does not exist in the writer.** There is no bitmap shape, and the
   `Image` layer type has never been read back in LightBurn's UI, so nothing raster can be
   emitted yet (R-G16). Text is done: live text with the attributes the writer already emits,

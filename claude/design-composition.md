@@ -42,8 +42,16 @@ developing the plugin itself.
   what someone keeping their user level deliberately spare will want.
 
 The data store is a sibling of the install (section 2), so the scope chosen also decides where
-the machine records live. A project-level install with a shared record base is still possible:
-`config.md` can point the store elsewhere, which is the escape hatch for exactly that case.
+the machine records live — **one store per installation, and its location is derived from the
+install, never configured**. Two installations sharing one record base is **deferred**: it needs
+a redirect the config format has no field for, and a redirect read from inside the store it is
+meant to redirect has to be thought through rather than guessed at. Nothing forecloses it. What
+it costs to defer is that someone installing at project level twice keeps two separate bases,
+which is the honest behaviour of what is built.
+
+The skills depend on this: they derive the store from their own installed path and are told not
+to search for it, which is what keeps a session from spending shell calls rediscovering where
+the user's data is. A configurable location would put that back.
 
 **One hazard specific to project level:** a project's `.claude` is often committed. The user's
 machine records, recipes and burn results must not be — so a project-level install prints the
