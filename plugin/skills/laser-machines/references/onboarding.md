@@ -18,7 +18,7 @@ The minimum for a usable record (R-M1, R-M2, R-M3):
 | Power in watts | Power class is what recipe research matches on | Nameplate, or the listing they bought from |
 | Laser source vendor and model | The frequency range and pulse-duration table are properties of the *source*, and researchable from its model code | Sticker on the source itself, often inside the cabinet |
 | Machine vendor | What the vendor's own documentation and community cover | Nameplate |
-| Lens or lenses: focal length each | Field size and spot follow from the lens, and a recipe is bound to it | Engraved on the barrel, usually `F=110mm` or similar |
+| Lens or lenses: **field size or focal length**, whichever they know | A recipe is bound to the lens, and everything about intensity follows from it | The field size is what a vendor advertises and what an owner remembers; the focal length is engraved on the barrel, usually `F=110mm` |
 | Tooling: rotary, air assist, extraction, autofocus, Z axis | Extraction is a safety answer, not a convenience one | They know this |
 
 **Never ask galvo versus gantry** (R-M5). The owner thinks in fiber/MOPA/CO2/diode, and the
@@ -100,9 +100,26 @@ A lens is not an attribute of the machine, it is an item in a list, and a recipe
 the **(machine, lens)** pair (R-M2). A 20 W source with a 110 mm lens and a 50 W with a 300 mm
 can behave alike, so the pair is the unit of comparison.
 
-Per lens: `id` (`f110`), `focal_mm`, `field_x_mm`, `field_y_mm`, `spot_mm` with its source. Field
-size is the lens's, and the owner may have bought a second lens without noticing that every
-recipe they have is bound to the first.
+**Ask in whichever terms the owner has.** Most owners know their lenses by field size - "70 by
+70, 150 by 150 and 300 by 300" - not by focal length, because the field is what the vendor
+advertises. Take what they give, record it `owner-stated`, and derive the other with
+`_source: derived`: the two track each other, roughly 110 mm for 70x70, 200 mm for 150x150 and
+300-330 mm for 300x300, but the exact pairing is the vendor's and a derived focal length stays a
+placeholder until the barrel is read or the paperwork says otherwise.
+
+The lens `id` names it the way the owner does - `f110` where the focal length is known, `70x70`
+where the field is. It has to be *something* before any recipe can be filed, because the id is
+part of the recipe's path.
+
+**Several lenses means several recipe bases, not one.** A longer focal length spreads the same
+energy over a larger spot: from a 70x70 field to a 300x300 one is roughly a fourfold change in
+spot diameter, and therefore about an order of magnitude in intensity at the same power. A
+recipe verified on one does not transfer to another. Say so at registration - an owner with
+three lenses has three times the calibration work ahead of them, and will otherwise find that
+out when their first good recipe stops working.
+
+Per lens: `id`, `focal_mm`, `field_x_mm`, `field_y_mm`, `spot_mm`, each with its `_source` where
+the value was not read off the machine itself.
 
 ## Writing the machine record
 
