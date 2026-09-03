@@ -28,7 +28,7 @@ later audience, not v1.
 | `claude/design-composition.md` | **exists** | First design pass: delivery, installed layout, the two skills and four commands, how they communicate. |
 | `claude/design-data-formats.md` | **exists** | Second design pass: the shape of every file — machine record, recipe, catalogue, config, regulatory cache, and the JSON spec handed to the generator. |
 | `plugin/skills/laser-lightburn/` | **partly** | `tools/` — the `.lbrn` writer and the probe generator. `references/lbrn-format.md` — verified versus assumed. `probe/` — the probe register, including the file LightBurn itself saved. No `SKILL.md` yet. |
-| `plugin/skills/laser-machines/` | *not yet* | The domain skill: onboarding, recipes, calibration, troubleshooting, the catalogue. |
+| `plugin/skills/laser-machines/` | **partly** | `references/catalogue/` — 30 authored entries with acceptance criteria. `references/materials.md` — the material vocabulary. No `SKILL.md` yet. |
 | `plugin/commands/` | *not yet* | The four entry points. |
 | `plugin/tests/` | **exists** | The committed test suite. 32 tests over the writer and the transform maths. |
 | `README.md` | **exists** | What the plugin will do, for a human. Deliberately minimal while it is unbuilt. |
@@ -38,8 +38,8 @@ later audience, not v1.
 Requirements are gathered, both design passes are done, and the `.lbrn` writer is imported,
 under test, and verified against LightBurn for every element it emits (R-G15 settled). What
 remains is building the skills themselves — neither `SKILL.md` exists, and there are no install
-scripts, so nothing is installable yet. Still undecided: how far geometry generation goes in v1
-(OQ-7), and which `.lbrn` format version to emit (OQ-8).
+scripts, so nothing is installable yet. The catalogue is authored (OQ-10 resolved); no design
+question is open.
 
 **This repository holds no private data** — no machine records, no recipes, no burn readings.
 Real work happens in a separate installation of the plugin; the loop back here is that a problem
@@ -99,6 +99,28 @@ These were settled in conversation and are recorded with their rationale in
 - **Toolchain is the .NET SDK** — chosen over Python and Node because on both Windows and Linux
   it is the smaller install barrier when nothing is installed yet. (R-E3)
 - **LightBurn v2 is the only target software.** EZCAD is not in the loop. (R-E1)
+- **v1 generates geometry, not just settings** — primitives, text at an exact character height,
+  arrays, imported vector art, and raster images including PNG/TIFF depth maps. Variable data
+  (`VariableText`) stays out. The writer has none of the raster side yet, and an `Image` layer
+  has never been read back in LightBurn's UI. (OQ-7, R-G16–R-G19)
+- **Production has two modes, and neither is the fallback of the other:** the plugin generates
+  the file from a description, or the user draws it in LightBurn and the plugin supplies the
+  layer parameters. Most real work is the second — the artwork is already the user's, and
+  parameters are what they are stuck on. (R-W3.4)
+- **In the second mode the parameters are delivered as text the user types in by hand** —
+  named and united as LightBurn's UI names them, carrying the recipe's provenance and
+  acceptance criteria. `.lbrn` is the only file v1 writes; a geometry-free `.lbrn` is rejected,
+  and writing `.lbset` material libraries is **v2, deferred not rejected** — so nothing in v1
+  may foreclose it, and a recipe must hold everything such an entry would need. (R-W3.5–R-W3.7,
+  R-G1)
+- **Text is live text, never outlines,** and the attribute set the writer already emits is
+  enough for LightBurn. Typeface, weight and fit are left to the person with the file open —
+  they are trivial to change there, unlike burn parameters, which is where the effort belongs.
+  No font parser, no width tables, no availability checks. (OQ-12, R-G18, R-G19)
+- **The writer emits `FormatVersion="1"`,** because that version can be checked by eye. Expect
+  LightBurn to rewrite the file in its own current format the moment it saves; that is fine,
+  because generated files are write-only and disposable — re-run the generator, never re-read a
+  saved file. (OQ-8, R-G3, R-G4)
 - **The plugin is fully self-contained.** Inherited material is copied in once; nothing is read
   at run time from a path outside the repository. (R-N4, and R-N5 for the user-data exception)
 - **Safety warnings are proactive**, and enforced in the plugin's instructions rather than

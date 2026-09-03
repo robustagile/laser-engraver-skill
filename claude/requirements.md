@@ -195,6 +195,18 @@ The machines the repository author has available to test against. They define wh
   much calibration it needs — and whether it is usable at all.
 - **R-R17** Where research finds nothing, the catalogue entry stays open and calibration starts
   from a computed starting point (R-R8) with a test card, provenance recorded as computed.
+- **R-R18** **A material the owner does not have cannot produce a verified recipe, and the
+  plugin must keep saying so.** Such an entry stays at `candidate` with its internet or computed
+  provenance indefinitely — the coverage map (R-R13) shows it as a gap, not as done, and the
+  agent does not offer its numbers for a production job without saying that nothing was ever
+  burned. This is not an edge case to tolerate: it is the standing check that the provenance
+  machinery (R-R7, R-R15) still works, because it is the one entry where the temptation to
+  present researched numbers as settled never goes away.
+- **R-R19** **Priority in the catalogue means "in what order does a new machine need this",**
+  not how interesting the work is. Priority 1 is what an owner needs in the first sessions after
+  the machine is assembled: the surface marks that show whether the machine is set up correctly
+  at all, and whatever regulatory work drove the purchase. Colour, relief and exotic materials
+  are later even when they are the reason someone wanted a MOPA.
 
 ## 7. Workflows
 
@@ -232,6 +244,50 @@ The machines the repository author has available to test against. They define wh
   placed correctly on the field.
 - **R-W3.3** Positioning matters — origin, where the workpiece sits, framing. A file that opens
   but marks in the wrong place is a failure.
+- **R-W3.4** **Production has two modes, and the user chooses.**
+  1. **Generated** — the agent builds the file from a description, within what the writer can
+     actually emit, and says plainly where that boundary runs rather than approximating past it.
+  2. **Drawn by the user** — the user draws the job in LightBurn, and the plugin supplies the
+     **layer parameters** for it: which layer gets which power, speed, interval, frequency,
+     pulse duration and passes, and why.
+
+  The two are not a full path and a fallback. Mode 2 is the honest shape of most real work: the
+  artwork is the user's, often already drawn or supplied by a customer, and the part they are
+  actually stuck on is the parameters (R-A1). Mode 1 exists for what is tedious or error-prone
+  to draw by hand — test cards, arrays, exact character heights, depth maps.
+- **R-W3.5** **In v1, mode 2 delivers parameters as text the user types into LightBurn's cut
+  settings by hand.** Typing a handful of numbers costs seconds and keeps the user looking at
+  every value they set, where an imported file sets things they never see; and it needs no
+  second undocumented format reverse-engineered before mode 2 works at all. A geometry-free
+  `.lbrn` is rejected outright — it carries the same numbers with more ceremony.
+
+  Meanwhile the user may save a setting they have typed in into **their own** LightBurn material
+  library, from LightBurn's UI, once a recipe is verified. The plugin should suggest that; the
+  library stays theirs, written and read by LightBurn alone.
+- **R-W3.6** **`.lbset` generation is v2, deferred rather than rejected.** Writing the material
+  library directly is the better end state — a verified recipe base becomes a library the user
+  applies with one click, instead of a page of numbers retyped per job. It waits because it is a
+  second undocumented format and would have to earn its facts the same way `.lbrn` did: get a
+  library LightBurn itself exported, work out how an entry carries material, thickness and the
+  cut settings, then confirm an entry this plugin wrote reads back in the Library panel. Nothing
+  in v1 may foreclose it — in particular, a recipe must hold everything such an entry would
+  need, not only what the typed text happens to show.
+- **R-W3.8** **A job may need the same geometry on more than one layer**, and mode 1 must be
+  able to emit that. The case that forces it: a regulatory serial is cut to depth and then given
+  contrast by a second pass over the identical geometry, so no bare bright metal is left exposed
+  — blackened by annealing on stainless, whitened by light etching on aluminium, or bonded with
+  ink where a true black is wanted. Legibility and corrosion resistance both. Registration between the two is free when
+  one generated file carries both layers and is a real problem when the user reproduces the
+  second pass by hand, which is exactly why this belongs to the generator.
+- **R-W3.7** Consequences of R-W3.5, all of them presentational and therefore easy to get wrong:
+  - The parameter block **names the fields as LightBurn's UI names them**, in the units the UI
+    shows, so the user transcribes rather than converts. Storage stays canonical (R-E6); this is
+    the presentation layer that sits on top of it.
+  - Every value the user must type is in the block. A parameter that matters and is left at
+    LightBurn's default is stated as such, not omitted.
+  - The recipe's **provenance and acceptance criteria travel with the numbers** (R-R7). A
+    candidate that has never been burned must be visibly a candidate at the moment it is being
+    typed in, together with what to look for in the result.
 
 ### Cross-cutting workflow — Troubleshooting by symptom
 
@@ -275,8 +331,9 @@ The machines the repository author has available to test against. They define wh
 
 ## 10. LightBurn file generation
 
-- **R-G1** The plugin generates `.lbrn` files. Generation of other LightBurn artefacts
-  (`.lbset` material libraries, device profiles) is a design-stage question, not a v1 commitment.
+- **R-G1** **v1 writes `.lbrn` files and nothing else.** `.lbset` material libraries are v2
+  (R-W3.6), not abandoned; device profiles are not planned at all. The v1 case that would have
+  wanted a library is served by parameters as text (R-W3.5).
 - **R-G2** The writer must be extended to emit **frequency** and **pulse duration**; without
   them the MOPA's two most important levers cannot be expressed. This is v1 work, not later.
 - **R-G3** Files are generated **write-only**: the plugin produces them and LightBurn consumes
@@ -344,6 +401,47 @@ never read at run time (R-N4).
   wrote, then generate a file in the format the plugin emits carrying those elements and confirm
   LightBurn shows the values in its UI. Step one alone proves nothing about the older format
   version the plugin writes.
+
+### Geometry scope, from OQ-7
+
+- **R-G16** The writer must gain a **bitmap shape** — a raster image placed, scaled and rotated
+  like any other shape — and must be able to put it on an **Image** layer. Neither exists as
+  verified knowledge today: there is no bitmap shape at all, and while `CutSettingType.Image`
+  already serialises as `type="Image"`, that string has never been read back in LightBurn's UI.
+  Both belong in the *assumed* list until a probe and a LightBurn-saved file settle how image
+  data is carried (embedded, referenced, or both), what image-mode settings ride on the layer,
+  and how the image's placement relates to its `XForm`.
+- **R-G17** **Depth maps are a v1 target**: a PNG or TIFF greyscale image drives depth-modulated
+  marking. Three things must be established before this can be emitted, and none is a matter of
+  opinion: which LightBurn image mode performs depth modulation rather than dithering; what
+  bit depth survives the path from source file into the `.lbrn` (a 16-bit depth map reduced to
+  256 levels is a different deliverable from the one the user asked for); and how depth in
+  micrometres maps onto grey level, which is a per-(machine, lens, material) calibration and
+  therefore a recipe, not a constant (R-R5, R-M2).
+- **R-G18** **Text is emitted as live text**; LightBurn turns it into glyphs. The writer does
+  not convert text to outlines, and needs neither a rasteriser nor a font parser. The attribute
+  set it already emits — `Font`, `H`, `LS`, `LnS`, `Bold`, `Italic`, `Ah`, `Av`, `Str` and the
+  transform — rendered correctly in `probe/04-text-group`, so **the minimum LightBurn needs is
+  already established and already met**. Height comes free with it: `H` is a cap height, so a
+  regulatory minimum character height (R-C3) is met by setting it.
+
+  **Typeface, weight and fit are deliberately not the generator's problem.** Changing a font or
+  nudging a size in an open file is easy and obvious to a person; getting the burn parameters
+  right is not. So no advance-width table, no fit checking and no font machinery is v1 work —
+  effort goes into the parameters instead. (The Arial table from the prior work stays available
+  for laying out a test card's labels, where the generator does place text itself, but it
+  blocks nothing.)
+- **R-G19** **A font is resolved on the host LightBurn runs on, not on the host the agent runs
+  on.** Live text in a `.lbrn` carries a font *name*; the glyphs come from whatever that name
+  resolves to when LightBurn opens the file. Under the owner's own arrangement — the agent in
+  WSL, LightBurn in Windows (R-E5) — the two hosts have different font sets, so a font the agent
+  can see is not evidence of a font the job will mark with. Two consequences:
+  1. Generated text therefore defaults to a font that is certainly present on the host that
+     runs LightBurn. Nothing more elaborate: no font directory in the config, no availability
+     check at generation time.
+  2. That is a deliberate proportion, not an oversight (R-G18). A substituted font is visible
+     the moment the file is opened and is fixed in LightBurn in seconds, so it does not earn
+     machinery. The agent says which font it used when a job carries text, and that is enough.
 
 ## 11. Non-functional
 
@@ -428,14 +526,78 @@ never read at run time (R-N4).
   labelled cell is primary; a photo is accepted for gross triage only and never as the basis for
   `verified`; a measurement is required wherever the criterion is dimensional. See
   `design-data-formats.md` §5.
-- **OQ-7** How far geometry generation goes in v1: layer settings only, layers plus geometry
-  (text with exact character height, primitives, SVG import, arrays), or also variable data.
-- **OQ-8** Whether to keep emitting the older format version (proven to render correctly) or
-  move to what LightBurn v2 writes natively.
+- **OQ-7** ~~How far geometry generation goes in v1: layer settings only, layers plus geometry
+  (text with exact character height, primitives, SVG import, arrays), or also variable data.~~
+  **Resolved:** the second tier, and past its far edge. v1 generates **layers plus geometry**:
+  primitives, text with exact character height, arrays, imported vector art, **and raster
+  images — including PNG/TIFF depth maps** for greyscale depth-modulated marking. Variable data
+  (serial numbers, dates; LightBurn's `VariableText`) stays out of v1. Rationale: the jobs the
+  owner actually has in mind carry artwork and depth, so a generator that emitted settings alone
+  would leave the whole of production to be done by hand — and could not produce the test cards
+  that stage 2 depends on either. The work this creates is R-G16 to R-G18.
+- **OQ-8** ~~Whether to keep emitting the older format version (proven to render correctly) or
+  move to what LightBurn v2 writes natively.~~ **Resolved:** keep emitting `FormatVersion="1"`.
+  It is the version that can be read by eye — a generated file stays small enough to check
+  against what was intended without opening anything. It has carried every element needed so
+  far, the fiber and MOPA ones included. The consequence is accepted rather than avoided:
+  **LightBurn rewrites the file in its own current format on any save**, so a file that has been
+  through LightBurn is no longer in the format this writer emits. That costs nothing, because
+  generated files are write-only and disposable (R-G3, R-G4) — the generator is re-run rather
+  than a saved file re-read.
 - **OQ-9** ~~How generated files reach Windows LightBurn from WSL.~~ **Resolved:** the output
   directory is a setting in the user's `config.md`, established at onboarding and pointing at a
   Windows-visible path. Records and deliverables are kept apart. See `design-composition.md` §5.
-- **OQ-10** What the recipe catalogue contains for v1 — which work types, goals and materials
+- **OQ-12** ~~Whether generated text is **live text** or **outlines**, and whether that is a
+  global default or a per-job choice.~~ **Resolved:** live text. The writer emits a string, a
+  font name and a height, and LightBurn does the glyph work — which keeps the text editable in
+  LightBurn, keeps a font parser out of the generator, and costs nothing on height, since
+  `Height` is a cap height and can simply be set to the criterion. The price is a hard
+  dependency on the font resolving correctly on LightBurn's host, which is what R-G19 exists
+  to enforce.
+- **OQ-10** ~~Whether the catalogue is one global list or differs per machine class~~ —
+  **resolved: it differs.** A MOPA has goals no other class can reach at all, colour marking
+  above the rest, and a catalogue that offered a CO2 owner "colour on stainless" would be
+  offering something their machine physically cannot do. The mechanism already exists in
+  `design-data-formats.md` §6: one catalogue directory, and every entry declares `applies_to`,
+  so the *effective* list is computed per machine and no two classes see the same one. Two
+  consequences: `applies_to` is mandatory on every entry and never defaults to "all", and an
+  entry may name parameters that only some classes have — colour marking rests on pulse duration,
+  which is exactly the MOPA lever R-G2 exists for.
+
+  **Also resolved: what the catalogue contains for v1.** Five works — `engraving` (shallow,
+  business-card class), `deep-engraving` (depth as the point, regulatory serialisation above
+  all), `relief` (depth that varies by design), `etching` (surface, no removal) and `annealing`
+  (dark oxide, no removal), plus `colour-annealing` for MOPA only. Engraving and etching apply
+  to **every** material in the vocabulary; the others are pointed:
+
+  - **deep-engraving** — stainless steel and **anodised** aluminium first, those being the
+    regulatory serialisation cases; raw aluminium and titanium after.
+  - **relief** — brass and stone, the medal and plaque work, not the steel cases.
+  - **annealing** — stainless steel and titanium only. Aluminium and brass form no dark oxide,
+    and an entry offering it would be offering something that cannot work.
+  - **colour-annealing** — stainless steel and titanium, MOPA only, resting on pulse duration
+    and frequency.
+  - **photo-marking** — dithered and greyscale photographs on stainless steel and aluminium
+    (MOPA, where tone comes from oxide colour) and on **anodised** aluminium (fiber too, where
+    tone comes from bleaching the coating and runs the opposite way: more energy, lighter). This
+    is what makes the raster half of OQ-7 load-bearing rather than speculative — none of it can
+    be generated until the writer has a bitmap shape and a verified `Image` layer (R-G16).
+    Dithered and greyscale are separate recipes on the same entry.
+  - **ink-bonding** — a laser-bonding ink on aluminium, the one route to a genuinely black mark
+    on a metal that does not anneal. It brings a consumable, a wash step and mandatory
+    extraction with it (R-S1).
+
+  Materials: stainless steel, aluminium (raw and anodised as separate cases), titanium and brass
+  on fiber; plastic and stone added for MOPA. The vocabulary is in
+  `skills/laser-machines/references/materials.md`, and 30 entries are authored in
+  `skills/laser-machines/references/catalogue/`. What is deliberately **absent** is as much a
+  decision as what is present: no annealing on aluminium or brass, no plain steel until there is
+  a machine to test it on, and **no CO2 entries at all**. The CO2 half of the catalogue is
+  deliberately not authored until that machine is on hand: what it can be asked to do depends on
+  what it turns out to be, and the prior question is whether LightBurn talks to its controller
+  at all (R-W1.3). Authoring CO2 entries from the fiber ones would be inventing a machine.
+
+  The original wording of the question — which work types, goals and materials
   are declared "needed" — and whether the catalogue is one global list, or differs per machine
   class (a CO2 and a MOPA do not want the same set).
 - **OQ-11** ~~The re-check policy for cached regulatory findings.~~ **Resolved:** 12 months —

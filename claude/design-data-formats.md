@@ -194,10 +194,11 @@ marking is measured, not judged.
 
 ```
 ---
-id: black-marking-stainless
-work: engraving
+id: annealing-stainless-steel
+work: annealing
 goal: black-marking
 material_family: stainless-steel
+material_surface: anodised   # optional; present only when the surface changes the goal
 applies_to: [fiber, mopa]
 priority: 1
 regulatory: false
@@ -214,6 +215,16 @@ catalogue entry and may tighten them, never loosen them.
 
 Coverage (R-R13) is then computable: catalogue entries whose `applies_to` includes this machine's
 type, minus the recipe files present for it, is the work list.
+
+`material_surface` is optional and appears only where the surface changes the goal rather than
+the settings — anodised aluminium, where the laser interacts with the coating and not the metal.
+It was added after the entries were authored: without it, "etch the anodising white" and "cut
+through it to depth" collapse into one entry, and they are different jobs.
+
+`applies_to` is **mandatory on every entry and never means "all"** (OQ-10). The classes do not
+want the same catalogue: colour marking on stainless is a MOPA goal, reachable through pulse
+duration and frequency, and it is not a thing a CO2 owner should ever be offered. One directory,
+one list per class computed from it.
 
 ## 7. Material vocabulary
 
@@ -273,7 +284,9 @@ failure to write, not a file that opens and marks wrongly (R-G5, R-G8).
 
 ## 10. What this pass does not decide
 
-- **OQ-7** — how far geometry generation goes in v1.
-- **OQ-8** — which `.lbrn` format version to emit.
-- **R-G15** — the two open format questions. Unblocked by nothing here; they need LightBurn.
+- Nothing raised by this pass is still open.
+
+Resolved elsewhere since this pass was written: **OQ-7** (layers, geometry, fonts and raster —
+see R-G16 to R-G19), **OQ-8** (emit `FormatVersion="1"`), **OQ-12** (live text, not outlines)
+and **R-G15** (every emitted element verified in LightBurn's UI).
 - The card catalogue itself: which cards exist, what each varies, and their versions.

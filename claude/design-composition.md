@@ -230,6 +230,8 @@ The formats are settled in `design-data-formats.md`: the machine record, the rec
 catalogue, the config, the regulatory cache, and the JSON specification this document called
 for in section 3. That pass also resolved OQ-4, OQ-6 and OQ-11.
 
-Still open after both passes: **OQ-7** (how far geometry generation goes in v1), **OQ-8** (which
-`.lbrn` format version to emit), and **R-G15** — the two format questions that need LightBurn
-rather than a decision.
+No design question is open after both passes. **OQ-10** is resolved — the catalogue differs by
+machine class and its v1 content is authored. **OQ-12** is resolved (live
+text; LightBurn makes the glyphs), and **OQ-7** is resolved — v1 generates layers, geometry, fonts and raster,
+including depth maps, which adds R-G16 to R-G19. **OQ-8** is resolved (`FormatVersion="1"`), and
+**R-G15** is closed: every element the writer emits has been read back in LightBurn's UI.

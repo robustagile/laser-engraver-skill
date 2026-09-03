@@ -73,11 +73,48 @@ same wrong assumption.
 
 ## Assumed — do not trust without checking
 
-**Nothing, currently.** Every element this writer emits has been seen read back in LightBurn's
-UI from a file written the way this writer writes it.
+- **`type="Image"` as a layer type.** `CutSettingType.Image` serialises to it and a unit test
+  asserts the string, but no probe has ever put an Image layer in front of LightBurn. The test
+  asserts what the writer writes, which is not evidence about what LightBurn reads — exactly the
+  trap the third rule above names. **Do not emit an Image layer until it has been read back in
+  the UI.**
+
+Every *other* element this writer emits has been seen read back in LightBurn's UI from a file
+written the way this writer writes it.
 
 Keep this section. The next element added to the writer belongs here until it has been seen in
 the UI — an element that has only been *written* is an assumption, however plausible its name.
+
+## Not known at all — needed for the geometry scope of OQ-7
+
+Neither of these exists in the writer, and nothing here has been established. Both want the same
+treatment as `QPulseWidth`: get a file LightBurn saved, then prove the elements read back from
+the format this writer emits.
+
+- **A bitmap shape.** How image data is carried (embedded base64, a path to the source file, or
+  both), how the image's placement relates to its `XForm`, and which settings ride on the layer
+  rather than the shape. Note that an embedded image ends the property that made
+  `FormatVersion="1"` worth keeping — such a file can no longer be checked by eye.
+- **Depth-map marking.** Which image mode modulates depth rather than dithering, and what bit
+  depth survives the path from a 16-bit PNG or TIFF into the file. Grey level to micrometres is
+  not a format question at all — it is a per-(machine, lens, material) calibration.
+
+## Text is live text, and the minimum is what is already written
+
+**This writer emits live text and never outlines** (OQ-12). The attribute set it writes —
+`Font`, `H`, `LS`, `LnS`, `Bold`, `Italic`, `Ah`, `Av`, `Str`, plus the transform — is what
+`probe/04-text-group` rendered correctly, so the minimum LightBurn needs is settled and met.
+A bare family name (`Font="Arial"`) is enough; LightBurn's own Qt descriptor
+(`Arial,-1,100,5,400,0,0,0,0,0`) is not required, and weight and slant have their own `Bold`
+and `Italic` attributes.
+
+`H` is a cap height, so a required character height is met by setting it.
+
+**Fonts resolve on the host that runs LightBurn**, not the one that runs the agent — under WSL
+those are two different font sets, and a name that does not resolve is substituted silently. The
+answer is to use a font that is certainly there, not to build checking machinery: typeface,
+weight and size are changed in seconds by whoever has the file open, and effort belongs in the
+burn parameters instead. (R-G18, R-G19)
 
 ## What LightBurn writes versus what this writer emits
 
