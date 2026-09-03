@@ -29,8 +29,7 @@ housekeeping rules in `CLAUDE.md`.
   level, first install and re-install, the `.gitignore` advice, the developer symlink mode, and
   the installed generator building where it lands. They copy files and nothing else, replace
   the skills and commands wholesale, never look inside the data store beside the target, and
-  stamp a `VERSION`
-  beside each `SKILL.md` (R-N7 to R-N9). A real Claude Code session in a project-level install
+  stamp a `VERSION` beside each `SKILL.md` (R-N7 to R-N10). A real Claude Code session in a project-level install
   finds both skills and all four commands by description alone, and routes correctly: a machine
   question loads `/laser-machine` and then `laser-machines`, a symptom loads `/laser-fix` and
   then `laser-machines`. Both skills state where the data store is and that it is derived rather
@@ -57,9 +56,10 @@ and machine constants, and their golden files. All of those encode the retired m
 numbers and its cards' geometry, and the cards will be redesigned for the MOPA and the CO2. The
 Arial advance-width table is machine-independent and can be brought over when cards are written.
 
-**No skill body is written yet.** The plugin installs, and what installs is a frame: neither
-skill can actually do anything. What exists is the machinery they will call, the catalogue they
-will read, the frame that says which file holds what, and a working way to deploy it.
+**One workflow of four works.** The plugin installs, a machine can be registered, and the path
+from there through LightBurn setup to calibration is written. Everything else — production,
+troubleshooting, the regulatory side, and the whole of `laser-lightburn` — is still a frame with
+the machinery sitting behind it.
 
 ## Open problems
 
@@ -76,9 +76,10 @@ will read, the frame that says which file holds what, and a working way to deplo
 - **Three catalogue entries cannot be generated at all yet.** The `photo-marking-*` entries need
   a bitmap shape and a verified `Image` layer, neither of which exists (R-G16) — the raster half
   of OQ-7 now has concrete dependants rather than being speculative.
-- **The catalogue has never been read by a skill**, because no skill exists to read it. Its 30
-  entries and their acceptance criteria are authored from domain knowledge and have not been
-  through a burn, so every criterion is a proposal until the machines arrive.
+- **No acceptance criterion has ever been through a burn.** The catalogue's 30 entries are
+  authored from domain knowledge, and `recipe-base.md` now reads them for coverage, but every
+  criterion stays a proposal until a machine says otherwise. The coverage view itself has not
+  been exercised either: it needs a registered machine with an identified lens.
 - **No test cards exist for either machine.** The prior machine's cards were deliberately not
   imported, and the new ones cannot be designed until there is a machine record to design
   against.
@@ -102,9 +103,9 @@ is onboarding and calibration — not file generation.
 2. **Fill in the troubleshooting body** (R-W4.1). It is the most common way in for this
    audience, it needs no machine and no generator, and the bench shows a symptom question
    already routes to it - into a file that is still headings.
-3. **Fill in `laser-lightburn/SKILL.md`** — machinery already behind it. It has to establish where
-   the data store is, check for the .NET SDK on first use (R-N8), and carry the one rule that
-   must never be missed: an element whose name has not been seen read back in LightBurn's UI
+3. **Fill in `laser-lightburn/SKILL.md`** — machinery already behind it, and the store and the
+   machine record are already settled in it. What is left is the .NET SDK check on first use
+   (R-N8), how the generator is invoked, and the one rule that must never be missed: an element whose name has not been seen read back in LightBurn's UI
    must not be emitted.
 4. **Then the first test card**, for the priority-1 catalogue entries on stainless and anodised
    aluminium — the work that starts the moment the machine is calibrated.
